@@ -11,7 +11,6 @@ async function googleAiKey() {
         // const data = await response.json();
         // return data.gaiKey;
 
-
         // console.log("Here is gai key", response.data.gaiKey)
         return response.data.gaiKey;
     } catch (error) {
