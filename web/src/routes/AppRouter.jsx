@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // Import layouts
 import PageLayout from "@/layouts/PageLayout";
 import TripLayout from "@/layouts/TripLayout";
+import CreateTrip from "@/pages/Trip/CreateTrip";
 
 // Import pages
 
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     {
         path: "/trip", element: <TripLayout /> ,
         children: [
-            {index: true, element: <p>Create Trip</p>}
+            {index: true, element: <CreateTrip />}
         ]
     },
 ]);
