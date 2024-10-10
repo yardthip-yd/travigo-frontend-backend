@@ -2,13 +2,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Import layouts
+import PageLayout from "@/layouts/PageLayout";
 
 // Import pages
 
 // Routing
 const router = createBrowserRouter([
     {
-        path: "/", element: <p>PageLayout</p>,
+        path: "/", element: <PageLayout />,
         children: [
             { index: true, element: <p>Home</p> },
             { path: "/login" , element: <p>Login</p> },
