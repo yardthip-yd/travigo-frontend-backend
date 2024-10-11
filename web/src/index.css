@@ -4,7 +4,23 @@
 
 @layer base {
   :root {
+    --placeholder-color: #0f172a;
+    /* สีสำหรับ light mode */
     --radius: 0.5rem
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --placeholder-color: #94a3b8;
+      /* สีสำหรับ dark mode */
+    }
+
+    /* ใช้สำหรับ input และ select */
+    input::placeholder,
+    select::placeholder {
+      color: var(--placeholder-color);
+      /* ใช้ custom property สำหรับ placeholder */
+    }
   }
 
   /* ซ่อนลูกศรใน input ของ number */
@@ -19,5 +35,19 @@
   input[type='number'] {
     appearance: none;
     /* ซ่อน spinner สำหรับ Firefox */
+  }
+
+  /* ซ่อน dropdown icon ของ select */
+  .select-custom {
+    background-image: none !important;
+    /* ซ่อน dropdown icon */
+    padding-right: 1.5rem;
+    /* ปรับ padding ตามที่คุณต้องการ */
+    position: relative;
+  }
+
+  .select-custom::-ms-expand {
+    display: none;
+    /* สำหรับ Internet Explorer */
   }
 }

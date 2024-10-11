@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar";
 
 const PageLayout = () => {
     return (
-        <div className="flex h-screen w-screen overflow-hidden">
+        <div className="flex h-screen w-full overflow-hidden">
             <div className="flex flex-1 flex-col">
                 <Navbar />
                 <Outlet />

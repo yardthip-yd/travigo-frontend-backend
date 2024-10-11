@@ -100,17 +100,19 @@ const CreateTrip = () => {
     }
 
     return (
-        <div className="h-full">
+        <div className="h-[720px] w-full">
             {/* Background */}
             <div>
                 <video
-                    className="absolute right-0 top-0 h-[720px] w-full object-cover z-[-1] opacity-50 bg-black"
+                    className="absolute right-0 top-0 h-[720px] w-full object-cover z-[-1]"
                     src={Mainvdo}
                     autoPlay
                     loop
                     muted
                 >
                 </video>
+                {/* Black Overlay */}
+                <div className="absolute h-[720px] inset-0 bg-black opacity-40 z-[-1]"></div>
             </div>
 
             <div className="w-full fixed my-[130px] flex flex-col items-center">
@@ -157,7 +159,8 @@ const CreateTrip = () => {
                                                 }),
                                                 placeholder: (provided) => ({
                                                     ...provided,
-                                                    color: '#94a3b8', // สีของ placeholder (ถ้าต้องการเปลี่ยน)
+                                                    color: 'var(--placeholder-color)', // สีของ placeholder (ถ้าต้องการเปลี่ยน)
+                                                    paddingLeft: '8px',
                                                 }),
                                                 indicatorSeparator: () => ({
                                                     display: 'none',
@@ -193,7 +196,7 @@ const CreateTrip = () => {
                                 <input
                                     type="number"
                                     placeholder="How many days..."
-                                    className="input input-bordered w-80 h-[47.99px] bg-slate-50 border-slate-200 text-slate-400 rounded-full"
+                                    className="input input-bordered w-80 h-[47.99px] bg-slate-50 border-slate-200 rounded-full"
                                     onChange={(e) => hdlInputChange("numberOfDays", e.target.value)} // Update number of days in form data
                                 />
                             </div>
@@ -206,7 +209,7 @@ const CreateTrip = () => {
                             <div className="flex flex-row items-center gap-1">
                                 <p>icon</p>
                                 <select
-                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full"
+                                    className="select select-bordered w-80 text-base text-sl bg-slate-50 border-slate-200 rounded-full select-custom "
                                     value={selectedBudget} // Set selected budget
                                     onChange={(e) => {
                                         setSelectedBudget(e.target.value); // Update selected budget
@@ -230,7 +233,7 @@ const CreateTrip = () => {
                             <div className="flex flex-row items-center gap-1">
                                 <p>icon</p>
                                 <select
-                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full"
+                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full select-custom"
                                     value={selectedTraveler}
                                     onChange={(e) => {
                                         setSelectedTraveler(e.target.value); // Update selected traveler
