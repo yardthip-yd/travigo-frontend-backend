@@ -50,4 +50,31 @@
     display: none;
     /* สำหรับ Internet Explorer */
   }
+
+  .carousel-item {
+    width: 400px;
+    /* กำหนดให้มีความกว้าง */
+    height: 400px;
+    /* กำหนดให้มีความสูงเพื่อให้เป็นสแควร์ */
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* จัดให้รูปอยู่ตรงกลางในแนวตั้ง */
+    justify-content: center;
+    /* จัดให้รูปอยู่ตรงกลางในแนวนอน */
+  }
+
+  img {
+    width: 100%;
+    /* ให้รูปภาพเต็มพื้นที่ */
+    height: 100%;
+    /* ให้รูปภาพเต็มพื้นที่ */
+    object-fit: cover;
+    /* ให้รูปไม่เสียอัตราส่วน */
+    border-radius: 0.5rem;
+    /* ปรับมุมให้มน */
+  }
+
+
+
 }

@@ -3,13 +3,13 @@ import { CorrectIcon } from "../ui/icon";
 
 const FeatureA = () => {
     return (
-        <div className="max-h-[600px] w-full min-w-[1440px] flex justify-start items-center bg-slate-50 px-[200px]">
+        <div className="max-h-[600px] w-full flex justify-start items-center bg-slate-50 px-[200px]">
             {/* Group A */}
             <div className="hero-content text-neutral-content lg:w-3/4 pt-20">
                 {/* Picture Step 1 */}
                 <div className="w-full flex justify-center">
                     <img
-                        className="rounded-xl shadow-xl"
+                        className="rounded-xl shadow-xl w-[400px] h-[400px]"
                         src={"https://picsum.photos/400/400"}
                         alt="img"
                     />

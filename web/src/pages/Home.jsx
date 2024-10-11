@@ -10,7 +10,7 @@ const Home = () => {
     return (
         <div className='overflow-auto relative'>
             <Main />
-            <PopDes />
+            {/* <PopDes /> */}
             <FeatureA />
             <FeatureB />
         </div>

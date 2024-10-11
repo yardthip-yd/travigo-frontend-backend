@@ -22,16 +22,7 @@ const Navbar = () => {
                                 <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </Link>
                         </li>
-                        <li className="relative group transition-colors">
-                            <Link
-                                to={"/pop-destination"}
-                                className="no-underline hover:text-blue-500 transition-colors duration-300"
-                            >
-                                <p>Popular Destination</p>
-                                {/* Underline effect */}
-                                <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            </Link>
-                        </li>
+
                         <li className="relative group transition-colors">
                             <Link
                                 to={"/trip"}
@@ -44,10 +35,15 @@ const Navbar = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="navbar-end">
-                    {/* <a className="btn">Login</a> */}
+                <div className="navbar-end gap-4">
 
-                    <button className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-25 border-none gap-2">
+                    <button className="btn btn-outline text-white rounded-full w-32 gap-2 outline outline-blue-500">
+                        <Link to={""} className="text-blue-500">
+                            Register
+                        </Link>
+                    </button>
+
+                    <button className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-32 border-none gap-2">
                         <LoginIcon className="w-4 h-4" />
                         <Link to={""} className="text-white">
                             Login

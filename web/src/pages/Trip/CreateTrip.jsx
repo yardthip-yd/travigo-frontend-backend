@@ -100,11 +100,11 @@ const CreateTrip = () => {
     }
 
     return (
-        <div className="h-[720px] w-full">
+        <div className="h-screen w-full flex items-center min-h-[500px]">
             {/* Background */}
             <div>
                 <video
-                    className="absolute right-0 top-0 h-[720px] w-full object-cover z-[-1]"
+                    className="absolute right-0 top-0 h-screen w-full object-cover z-[-1]"
                     src={Mainvdo}
                     autoPlay
                     loop
@@ -112,7 +112,7 @@ const CreateTrip = () => {
                 >
                 </video>
                 {/* Black Overlay */}
-                <div className="absolute h-[720px] inset-0 bg-black opacity-40 z-[-1]"></div>
+                <div className="absolute h-screen inset-0 bg-black opacity-40 z-[-1]"></div>
             </div>
 
             <div className="w-full fixed my-[130px] flex flex-col items-center">
