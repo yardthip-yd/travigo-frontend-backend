@@ -65,7 +65,7 @@ const Carousel = () => {
     return (
         <div className="relative w-full overflow-hidden">
             <div className="flex transition-transform duration-500"
-            //  style={{ transform: `translateX(-${(currentIndex) * (100 / 4)}%)` }}
+             style={{ transform: `translateX(-${(currentIndex) * (100 / 4)}%)` }}
              >
                 {items.map((product) => (
                     <div key={product.id} className="card bg-base-100 shadow-xl rounded-lg overflow-hidden w-[200px] h-[200px] mx-2">

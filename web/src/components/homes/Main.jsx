@@ -32,10 +32,9 @@ const Main = () => {
                     </div>
 
                     {/* Go to create trip */}
-                    <button className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-40 border-none">
-                        <Link to={"/trip"}>Get Started</Link>
-                    </button>
-
+                    <Link to={"/trip"}className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-40 border-none">
+                        Get Started
+                    </Link>
                 </div>
             </div>
         </div >

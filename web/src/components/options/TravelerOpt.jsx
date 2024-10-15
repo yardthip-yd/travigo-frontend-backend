@@ -2,7 +2,7 @@
 const TravelerOpt = [
     {
         id:1,
-        title:'Me',
+        title:'Solo',
         people:'1 People'
     },
     {

@@ -6,6 +6,74 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  email        String   @unique
+  password     String
+  profileImage String?  @map("profile_image")
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  Trip         Trip[]
+
+  @@map("user")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Trip {
+  id          Int          @id @default(autoincrement())
+  destination String
+  budget      Float
+  travelers   Int
+  days        Int
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int          @map("user_id")
+  Hotel       Hotel[]
+  Intinerary  Intinerary[]
+
+  @@map("trip")
+}
+
+model Hotel {
+  id               Int     @id @default(autoincrement())
+  hotelName        String  @map("hotel_name")
+  hotelAddress     String  @map("hotel_address")
+  hotelPrice       Float   @map("hotel_price")
+  hotelImageUrl    String? @map("hotel_image_url")
+  hotelRating      Float   @map("hotel_rating")
+  hotelDescription String  @map("hotel_description")
+  latitude         Float
+  longtitude       Float
+  trip             Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  tripId           Int     @map("trip_id")
+
+  @@map("hotel")
+}
+
+model Intinerary {
+  id               Int     @id @default(autoincrement())
+  day              Int
+  placeName        String  @map("place_name")
+  placeDescription String  @map("place_description")
+  placeImageUrl    String? @map("place_image_url")
+  ticketPrice      Float   @map("ticket_price")
+  bestTimeToVisit  String  @map("best_time_to_visit")
+  latitude         Float
+  longtitude       Float
+  trip             Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  tripId           Int     @map("trip_id")
+
+  @@map("intinerary")
 }

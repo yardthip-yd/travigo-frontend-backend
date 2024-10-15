@@ -37,18 +37,14 @@ const Navbar = () => {
                 </div>
                 <div className="navbar-end gap-4">
 
-                    <button className="btn btn-outline text-white rounded-full w-32 gap-2 outline outline-blue-500">
-                        <Link to={""} className="text-blue-500">
-                            Register
-                        </Link>
-                    </button>
+                    <Link to={"/register"} className="btn btn-outline text-blue-500 rounded-full w-32 gap-2 outline outline-blue-500 outline-2 bg-white hover:bg-white hover:text-blue-500">
+                        Register
+                    </Link>
 
-                    <button className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-32 border-none gap-2">
+                    <Link to={"login"} className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-32 border-none gap-2 flex items-center">
                         <LoginIcon className="w-4 h-4" />
-                        <Link to={""} className="text-white">
-                            Login
-                        </Link>
-                    </button>
+                        Login
+                    </Link>
                 </div>
             </div>
         </div>

@@ -159,7 +159,7 @@ const CreateTrip = () => {
                                                 }),
                                                 placeholder: (provided) => ({
                                                     ...provided,
-                                                    color: 'var(--placeholder-color)', // สีของ placeholder (ถ้าต้องการเปลี่ยน)
+                                                    color: '#0f172a',
                                                     paddingLeft: '8px',
                                                 }),
                                                 indicatorSeparator: () => ({
@@ -196,7 +196,7 @@ const CreateTrip = () => {
                                 <input
                                     type="number"
                                     placeholder="How many days..."
-                                    className="input input-bordered w-80 h-[47.99px] bg-slate-50 border-slate-200 rounded-full"
+                                    className="input input-bordered w-80 h-[47.99px] bg-slate-50 border-slate-200 rounded-full placeholder:text-slate-900"
                                     onChange={(e) => hdlInputChange("numberOfDays", e.target.value)} // Update number of days in form data
                                 />
                             </div>
@@ -209,7 +209,7 @@ const CreateTrip = () => {
                             <div className="flex flex-row items-center gap-1">
                                 <p>icon</p>
                                 <select
-                                    className="select select-bordered w-80 text-base text-sl bg-slate-50 border-slate-200 rounded-full select-custom "
+                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full text-slate-900"
                                     value={selectedBudget} // Set selected budget
                                     onChange={(e) => {
                                         setSelectedBudget(e.target.value); // Update selected budget
@@ -233,7 +233,7 @@ const CreateTrip = () => {
                             <div className="flex flex-row items-center gap-1">
                                 <p>icon</p>
                                 <select
-                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full select-custom"
+                                    className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full select-custom text-slate-900"
                                     value={selectedTraveler}
                                     onChange={(e) => {
                                         setSelectedTraveler(e.target.value); // Update selected traveler
