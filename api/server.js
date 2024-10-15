@@ -9,8 +9,8 @@ const gplaceRoute = require("./routes/gplace-route");
 const gaiRoute = require("./routes/gai-route");
 
 // Import Error
-// const notFound = require("../api/middleware/not-found");
-// const errorMiddleware = require("../api/middleware/error");
+const errorMiddleware = require("../api/middleware/error-middleware");
+const notFoundMiddleware = require("../api/middleware/not-found-middleware");
 
 // Middleware
 app.use(express.json());
@@ -21,8 +21,8 @@ app.use("/api", gplaceRoute)
 app.use("/api", gaiRoute)
 
 // Error Middleware
-// app.use(errorMiddleware);
-// app.use("*", notFound);
+app.use(errorMiddleware);
+app.use("*", notFoundMiddleware) ;
 
 // Run server
 const port = process.env.PORT;
