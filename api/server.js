@@ -9,7 +9,8 @@ const gplaceRoute = require("./routes/gplace-route");
 const gaiRoute = require("./routes/gai-route");
 
 // Import Routing
-const authRoute = require("./routes/auth-route")
+const authRoute = require("./routes/auth-route");
+const tripRoute = require("./routes/trip-route");
 
 // Import Error
 const errorMiddleware = require("../api/middleware/error-middleware");
@@ -25,6 +26,7 @@ app.use("/api", gaiRoute)
 
 // Import Routing
 app.use("/auth", authRoute)
+app.use("/trip", tripRoute)
 
 // Error Middleware
 app.use(errorMiddleware);

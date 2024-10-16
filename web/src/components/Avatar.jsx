@@ -1,6 +1,6 @@
 // Import
 import React from 'react'
-import defaultAvatar from "@/assets/image/avatar-cloud-default.png"
+import defaultAvatar from "@/assets/image/avatar-cactus-default.png"
 
 const Avatar = (props) => {
 

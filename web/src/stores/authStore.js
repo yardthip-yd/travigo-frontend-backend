@@ -13,13 +13,13 @@ const useAuthStore = create(
                 // get input from outside
 
                 const result = await axios.post("http://localhost:9900/auth/register", input)
-                console.log("Register in Zustand", result.data.message)
+                // console.log("Register in Zustand", result.data.message)
             },
             actionLogin: async (input) => {
                 // get input from outside
 
                 const result = await axios.post("http://localhost:9900/auth/login", input)
-                console.log("Login in Zustand", result.data)
+                // console.log("Login in Zustand", result.data)
 
                 set({
                     token: result.data.token,

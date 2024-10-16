@@ -33,8 +33,8 @@ enum Role {
 model Trip {
   id          Int         @id @default(autoincrement())
   destination String
-  budget      Float
-  travelers   Int
+  budget      String
+  travelers   String
   days        Int
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")

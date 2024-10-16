@@ -36,12 +36,12 @@ const Login = () => {
             // Send information input
             const result = await actionLogin(input)
 
-            console.log("Login Successful!")
+            // console.log("Login Successful!")
             toast.success("Login Successful!")
 
         } catch (err) {
             const errMsg = err.response?.data?.error || err.message
-            console.log("Login not success", errMsg)
+            // console.log("Login not success", errMsg)
             toast.error("Login not success", errMsg)
         }
     }

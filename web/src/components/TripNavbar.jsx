@@ -12,11 +12,11 @@ const TripNavbar = () => {
     const user = useAuthStore((state) => state.user)
     const actionLogout = useAuthStore((state) => state.actionLogout)
 
-    useEffect(() => {
-        if (user) {
-            console.log("Current user:", user);
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (user) {
+    //         console.log("Current user:", user);
+    //     }
+    // }, [user]);
 
     return (
         <div>

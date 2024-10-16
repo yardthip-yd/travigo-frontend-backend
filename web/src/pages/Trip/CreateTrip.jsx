@@ -18,7 +18,16 @@ import TravelerOpt from "@/components/options/TravelerOpt";
 import Mainvdo from "@/assets/video/main.mp4"
 import { DropdownIcon } from "@/components/ui/icon";
 
+// Import Create Trip
+import { createTrip } from "@/services/TripService"
+
+// Import store
+import useAuthStore from "@/stores/authStore";
+
 const CreateTrip = () => {
+
+    // State from Stores
+    const user = useAuthStore((state) => state.user)
 
     // useState for store the Gplace Key as API key
     const [apiKey, setApiKey] = useState("");
@@ -73,7 +82,7 @@ const CreateTrip = () => {
             toast.info("Please fill all details")
             return;
         }
-        // console.log(formData)
+        console.log("Form data", formData)
 
 
         // Construct the prompt for the AI model
@@ -91,13 +100,46 @@ const CreateTrip = () => {
             const result = await chatSession.sendMessage(FINAL_PROMPT);
             // console.log(result?.response?.text());
 
+            // Log to see trip data
             const jsonResponse = JSON.parse(result?.response?.text());
-            console.log(JSON.stringify(jsonResponse, null, 2));
+            // console.log(JSON.stringify(jsonResponse, null, 2));
+
+            // Log AI response
+            console.log("JSON Response from AI:", jsonResponse); 
+        
+            // Save trip data to the database
+            await saveTripToDatabase(jsonResponse);
 
         } catch (error) {
             console.error("Error generating trip:", error);
         }
     }
+
+    // Fn to save trip data to the database
+    const saveTripToDatabase = async (jsonResponse) => {
+        try {
+            const userId = user.id;
+            // console.log("User ID:", userId);
+
+            const tripData ={
+                destination: place?.label,
+                budget: selectedBudget,
+                travelers: selectedTraveler,
+                days: parseInt(formData.numberOfDays, 10),
+                userId: userId, // user ID from Zustand
+                jsonResponse, // Send AI response for hotels and itinerary
+            };
+            console.log("Trip Data to save:", tripData)
+
+            const response = await createTrip(tripData)
+            console.log("Trip created:", response);
+
+            toast.success("Trip created successfully!");
+        } catch (error) {
+            console.error("Error creating trip:", error);
+            toast.error("Error creating trip. Please try again."); // Notify user of failure
+        }
+    };
 
     return (
         <div className="h-screen w-full flex items-center min-h-[500px]">
@@ -147,7 +189,7 @@ const CreateTrip = () => {
                                                 setPlace(placeData); // Update selected place
                                                 hdlInputChange("destination", placeData); // Update destination in form data
                                             },
-                                            placeholder: "Select destination...",
+                                            placeholder: "Search your destination...",
                                             className: "w-80 bg-slate-50 border-slate-200 rounded-full",
                                             styles: {
                                                 control: (provided) => ({
@@ -245,7 +287,7 @@ const CreateTrip = () => {
                                     </option>
 
                                     {TravelerOpt.map((item, index) => (
-                                        <option key={index} value={item.people}>
+                                        <option key={index} value={item.title}>
                                             {item.title} ({item.people})
                                         </option>
                                     ))}
