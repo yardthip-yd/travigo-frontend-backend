@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify"
 
-// Import State
+// Import store
 import useAuthStore from '@/stores/authStore';
 
 const Login = () => {
@@ -51,7 +51,7 @@ const Login = () => {
             <div className="flex m-auto bg-white rounded-xl w-[1167.66px]">
 
                 {/* Welcome */}
-                <div className="text-white h-[583.83px] w-[583.83px] lg:w-1/2 rounded-l-xl flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-[url('assets/rpnickson1.jpg')]">
+                <div className="text-white h-[583.83px] w-[583.83px] lg:w-1/2 rounded-l-xl flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-[url('assets/image/rpnickson1.jpg')]">
                     {/* <h1 className="text-3xl font-semibold mb-3">Welcome Back</h1>
                     <p className="">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p> */}
                 </div>

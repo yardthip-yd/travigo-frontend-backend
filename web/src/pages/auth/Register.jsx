@@ -72,7 +72,7 @@ const Register = () => {
             <div className="flex m-auto bg-white rounded-xl w-[1167.66px]">
 
                 {/* Welcome */}
-                <div className="text-white h-[583.83px] w-full lg:w-1/2 rounded-l-xl flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-[url('assets/rpnickson1.jpg')]">
+                <div className="text-white h-[583.83px] w-full lg:w-1/2 rounded-l-xl flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-[url('assets/image/rpnickson1.jpg')]">
                     {/* <h1 className="text-3xl font-semibold mb-3">Welcome</h1>
                     <p className="">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p> */}
                 </div>

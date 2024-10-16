@@ -22,17 +22,6 @@ const Navbar = () => {
                                 <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </Link>
                         </li>
-
-                        <li className="relative group transition-colors">
-                            <Link
-                                to={"/trip"}
-                                className="no-underline hover:text-blue-500 transition-colors duration-300"
-                            >
-                                <p>Create Trip</p>
-                                {/* Underline effect */}
-                                <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            </Link>
-                        </li>
                     </ul>
                 </div>
                 <div className="navbar-end gap-4">

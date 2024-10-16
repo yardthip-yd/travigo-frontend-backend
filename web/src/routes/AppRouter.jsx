@@ -11,31 +11,49 @@ import Home from "@/pages/Home";
 import Register from "@/pages/auth/Register";
 import Login from "@/pages/auth/Login";
 
+// Import store
+import useAuthStore from "@/stores/authStore";
+
 // Routing
-const router = createBrowserRouter([
+const guestRouter = createBrowserRouter([
     {
         path: "/", element: <PageLayout />,
         children: [
             { index: true, element: <Home /> },
-            { path: "/login", element: <Login/> },
+            { path: "/login", element: <Login Navigate to="/trip" /> },
             { path: "/register", element: <Register /> },
-            { path: "/pop-destination", element: <p>Popular Destination</p> },
             { path: "*", element: <Navigate to="/" /> },
         ],
     },
+    // {
+    //     path: "/trip", element: <TripLayout />,
+    //     children: [
+    //         { index: true, element: <CreateTrip /> }
+    //     ]
+    // },
+]);
+
+const userRouter = createBrowserRouter([
     {
-        path: "/trip", element: <TripLayout />,
+        path: "/", element: <TripLayout />,
         children: [
-            { index: true, element: <CreateTrip /> }
+            { index: true, element: <CreateTrip /> },
+            { path: "*", element: <Navigate to="/" /> },
         ]
     },
-]);
+])
 
 // Export AppRoute
 const AppRoute = () => {
+
+    // State for use authStore
+    const user = useAuthStore((state) => state.user)
+
+    const finalRouter = user ? userRouter : guestRouter
+
     return (
         <div>
-            <RouterProvider router={router} />
+            <RouterProvider router={finalRouter} />
         </div>
     );
 };
