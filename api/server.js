@@ -4,9 +4,12 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-// Import Routing
+// Import Routing API
 const gplaceRoute = require("./routes/gplace-route");
 const gaiRoute = require("./routes/gai-route");
+
+// Import Routing
+const authRoute = require("./routes/auth-route")
 
 // Import Error
 const errorMiddleware = require("../api/middleware/error-middleware");
@@ -16,9 +19,12 @@ const notFoundMiddleware = require("../api/middleware/not-found-middleware");
 app.use(express.json());
 app.use(cors());
 
-// Routing
+// Routing API
 app.use("/api", gplaceRoute)
 app.use("/api", gaiRoute)
+
+// Import Routing
+app.use("/auth", authRoute)
 
 // Error Middleware
 app.use(errorMiddleware);

@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 
 // Import GPlace
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { googlePlaceKey } from "@/services/gplaceService";
+import { googlePlaceKey } from "@/services/GPlaceService";
 
 // Import GAI
-import { createChatSession } from "@/services/gaiService"
+import { createChatSession } from "@/services/GAiService"
 import AI_PROMPT from "@/components/options/AiGen";
 
 // Import Option for Form Create Trip
@@ -65,7 +65,7 @@ const CreateTrip = () => {
         });
     };
 
-    // Fn for generate trip
+    // Fn for generate trip from AI
     const generateTrip = async () => {
 
         // Check if the required fields are filled

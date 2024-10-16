@@ -1,7 +1,51 @@
-import React from 'react'
+// Import
+import React, { useState } from 'react'
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify"
+
+// Import State
+import useAuthStore from '@/stores/authStore';
 
 const Login = () => {
+
+    // State from Stores
+    const actionLogin = useAuthStore((state) => state.actionLogin)
+
+    // useState for input
+    const [input, setInput] = useState({
+        email: "",
+        password: ""
+    })
+
+    // Fn handleChange update input when user fill information
+    const hdlChange = (e) => {
+        setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }))
+    }
+
+    // Fn handleRegister for register success
+    const hdlLogin = async (e) => {
+        try {
+            e.preventDefault()
+    
+            // Validation 
+            // Check user fill information or not?
+            if (!(input.email.trim() && input.password.trim())) {
+                return toast.info("Please fill all informations")
+            }
+    
+            // Send information input
+            const result = await actionLogin(input)
+
+            console.log("Login Successful!")
+            toast.success("Login Successful!")
+
+        } catch (err) {
+            const errMsg = err.response?.data?.error || err.message
+            console.log("Login not success", errMsg)
+            toast.error("Login not success", errMsg)
+        }
+    }
+
     return (
         <div className="h-screen w-full flex items-center min-h-[500px] bg-gradient-to-br from-indigo-100 to-sky-100 bg-center">
             <div className="flex m-auto bg-white rounded-xl w-[1167.66px]">
@@ -24,7 +68,10 @@ const Login = () => {
                     </div>
 
                     {/* Form Login */}
-                    <form className="px-8 flex flex-col gap-3 relative pb-8 mt-16">
+                    <form 
+                        className="px-8 flex flex-col gap-3 relative pb-8 mt-16"
+                        onSubmit={hdlLogin}
+                    >
 
                         {/* Email */}
                         <div className="flex flex-row items-center gap-1">
@@ -34,8 +81,8 @@ const Login = () => {
                                 type="text"
                                 placeholder="Email"
                                 name="email"
-                            // value={input.name}
-                            // onChange={hdlChange}
+                                value={input.email}
+                                onChange={hdlChange}
                             />
                         </div>
 
@@ -47,8 +94,8 @@ const Login = () => {
                                 type="password"
                                 placeholder="Password"
                                 name="password"
-                            // value={input.password}
-                            // onChange={hdlChange}
+                                value={input.password}
+                                onChange={hdlChange}
                             />
                         </div>
 

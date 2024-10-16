@@ -1,8 +1,72 @@
 // Import
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify"
+
+// Import Store
+import useAuthStore from "@/stores/authStore";
+
 
 const Register = () => {
+
+    // State from Stores
+    const actionRegister = useAuthStore((state) => state.actionRegister)
+
+    // useState for input
+    const [input, setInput] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+    })
+
+    // Fn handleChange update input when user fill information
+    const hdlChange = (e) => {
+        setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }))
+    }
+
+    // Fn handleRegister for register success
+    const hdlRegister = async (e) => {
+        try {
+
+            e.preventDefault()
+
+            // Validation 
+            // Check user fill information or not?
+            if (!(input.firstName || input.lastName || input.email || input.password || input.confirmPassword)) {
+                // return alert("Please fill all informations")
+                return toast.info("Please fill all informations")
+            }
+
+            // Check password match with confirm password
+            if (input.password !== input.confirmPassword) {
+                // return alert("Password do not match")
+                return toast.info("Password do not match")
+            }
+            
+            // Send information input
+            const result = await actionRegister(input)
+
+            // Clear input
+            setInput({
+                firstName: "",
+                lastName: "",
+                email: "",
+                password: "",
+                confirmPassword: ""
+            })
+
+            console.log("Register Successful!")
+            toast.success("Register Successful!")
+
+        } catch (err) {
+            const errMsg = err.response?.data?.error || err.message
+            console.log("Register not success", errMsg)
+            toast.error("Register not success", errMsg)
+        }
+    }
+
     return (
         <div className="h-screen w-full flex items-center min-h-[500px] bg-gradient-to-br from-indigo-100 to-sky-100 bg-center">
             <div className="flex m-auto bg-white rounded-xl w-[1167.66px]">
@@ -25,7 +89,10 @@ const Register = () => {
                     </div>
 
                     {/* Form Register */}
-                    <form className="px-8 flex flex-col gap-3 relative pb-8">
+                    <form 
+                        className="px-8 flex flex-col gap-3 relative pb-8"
+                        onSubmit={hdlRegister}
+                    >
                         {/* Firstname and Lastname */}
                         <div className="flex items-center gap-1">
                             <p>icon</p>
@@ -34,16 +101,16 @@ const Register = () => {
                                 type="text"
                                 placeholder="Firstname"
                                 name="firstName"
-                            // value={input.firstName}
-                            // onChange={hdlChange}
+                                value={input.firstName}
+                                onChange={hdlChange}
                             />
                             <input
                                 className="input input-bordered w-full bg-slate-50 border-none"
                                 type="text"
                                 placeholder="Surname"
                                 name="lastName"
-                            // value={input.lastName}
-                            // onChange={hdlChange}
+                                value={input.lastName}
+                                onChange={hdlChange}
                             />
                         </div>
 
@@ -55,8 +122,8 @@ const Register = () => {
                                 type="text"
                                 placeholder="Email"
                                 name="email"
-                            // value={input.name}
-                            // onChange={hdlChange}
+                                value={input.email}
+                                onChange={hdlChange}
                             />
                         </div>
 
@@ -68,8 +135,8 @@ const Register = () => {
                                 type="password"
                                 placeholder="Password"
                                 name="password"
-                            // value={input.password}
-                            // onChange={hdlChange}
+                                value={input.password}
+                                onChange={hdlChange}
                             />
                         </div>
 
@@ -81,8 +148,8 @@ const Register = () => {
                                 type="password"
                                 placeholder="Confirm Password"
                                 name="confirmPassword"
-                            // value={input.confirmPassword}
-                            // onChange={hdlChange}
+                                value={input.confirmPassword}
+                                onChange={hdlChange}
                             />
                         </div>
 
@@ -98,7 +165,7 @@ const Register = () => {
                         <p className="text-slate-900">Already Create an Account?</p>
                         <Link to={"/login"} className="hover:text-blue-500 transition-colors duration-300"><p className="text-sky-500">Login</p></Link>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
