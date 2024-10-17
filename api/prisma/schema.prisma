@@ -53,7 +53,7 @@ model Hotel {
   hotelPrice       Float   @map("hotel_price")
   hotelImageUrl    String? @map("hotel_image_url")
   hotelRating      Float   @map("hotel_rating")
-  hotelDescription String  @map("hotel_description")
+  hotelDescription String  @map("hotel_description") @db.Text
   latitude         Float
   longtitude       Float
   trip             Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
@@ -66,7 +66,7 @@ model Itinerary {
   id               Int     @id @default(autoincrement())
   day              Int
   placeName        String  @map("place_name")
-  placeDescription String  @map("place_description")
+  placeDescription String  @map("place_description") @db.Text
   placeImageUrl    String? @map("place_image_url")
   ticketPrice      Float   @map("ticket_price")
   bestTimeToVisit  String  @map("best_time_to_visit")

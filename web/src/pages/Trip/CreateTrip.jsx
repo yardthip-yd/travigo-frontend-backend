@@ -1,6 +1,7 @@
 // Import
 import React, { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 // Import GPlace
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
@@ -18,16 +19,11 @@ import TravelerOpt from "@/components/options/TravelerOpt";
 import Mainvdo from "@/assets/video/main.mp4"
 import { DropdownIcon } from "@/components/ui/icon";
 
-// Import Create Trip
-import { createTrip } from "@/services/TripService"
-
 // Import store
 import useAuthStore from "@/stores/authStore";
+import useTripStore from "@/stores/tripStore";
 
 const CreateTrip = () => {
-
-    // State from Stores
-    const user = useAuthStore((state) => state.user)
 
     // useState for store the Gplace Key as API key
     const [apiKey, setApiKey] = useState("");
@@ -43,6 +39,15 @@ const CreateTrip = () => {
 
     // useState for store selected Traveler option
     const [selectedTraveler, setSelectedTraveler] = useState("");
+
+    // State from Stores
+    const user = useAuthStore((state) => state.user)
+
+    // Fetch createTrip from tripStore
+    const createTrip = useTripStore((state) => state.createTrip);
+
+    // Navigate
+    const navigate = useNavigate();
 
     // useEffect to fetch Google Places Key
     useEffect(() => {
@@ -105,8 +110,8 @@ const CreateTrip = () => {
             // console.log(JSON.stringify(jsonResponse, null, 2));
 
             // Log AI response
-            console.log("JSON Response from AI:", jsonResponse); 
-        
+            console.log("JSON Response from AI:", jsonResponse);
+
             // Save trip data to the database
             await saveTripToDatabase(jsonResponse);
 
@@ -121,7 +126,7 @@ const CreateTrip = () => {
             const userId = user.id;
             // console.log("User ID:", userId);
 
-            const tripData ={
+            const tripData = {
                 destination: place?.label,
                 budget: selectedBudget,
                 travelers: selectedTraveler,
@@ -135,6 +140,11 @@ const CreateTrip = () => {
             console.log("Trip created:", response);
 
             toast.success("Trip created successfully!");
+
+            // // Redirect to the view trip page with the tripId
+            // navigate(`/view-trip/${response.id}`);
+            navigate(`/view-trip/${response.result.id}`);
+
         } catch (error) {
             console.error("Error creating trip:", error);
             toast.error("Error creating trip. Please try again."); // Notify user of failure
@@ -157,6 +167,7 @@ const CreateTrip = () => {
                 <div className="absolute h-screen inset-0 bg-black opacity-40 z-[-1]"></div>
             </div>
 
+            {/* Information */}
             <div className="w-full fixed my-[130px] flex flex-col items-center">
 
                 <div className="flex flex-col text-start">

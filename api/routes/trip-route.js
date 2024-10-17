@@ -7,5 +7,6 @@ const tripRoute = express.Router()
 const { tripValidator } = require("../middleware/trip-validator-middleware")
 
 tripRoute.post("/create-trip", tripValidator, tripController.createTrip)
+tripRoute.get("/view-trip/:tripId", tripController.getTrip)
 
 module.exports = tripRoute

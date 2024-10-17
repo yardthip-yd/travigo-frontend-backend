@@ -59,7 +59,7 @@ const saveTripData = async (tripData) => {
                         placeDescription: plan.PlaceDetails,
                         placeImageUrl: plan.PlaceImageURL,
                         ticketPrice: parseFloat(plan.TicketPricing) || 0,
-                        bestTimeToVisit: day.bestTimeToVisit,
+                        bestTimeToVisit: day.bestTimeToVisit || "Unknown",
                         latitude: parseFloat(plan.PlaceGeoCoordinates.latitude),
                         longtitude: parseFloat(plan.PlaceGeoCoordinates.longitude),
                     },
@@ -67,7 +67,7 @@ const saveTripData = async (tripData) => {
             }
         }
 
-        console.log("Trip Data for Itinerary:", tripData.jsonResponse.itinerary);
+        // console.log("Trip Data for Itinerary:", tripData.jsonResponse.itinerary);
     } else {
         console.warn("No itinerary data available in the response");
     }

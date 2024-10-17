@@ -10,6 +10,7 @@ import CreateTrip from "@/pages/trip/CreateTrip";
 import Home from "@/pages/Home";
 import Register from "@/pages/auth/Register";
 import Login from "@/pages/auth/Login";
+import ViewTrip from "@/pages/trip/[tripId]/ViewTrip";
 
 // Import store
 import useAuthStore from "@/stores/authStore";
@@ -20,17 +21,11 @@ const guestRouter = createBrowserRouter([
         path: "/", element: <PageLayout />,
         children: [
             { index: true, element: <Home /> },
-            { path: "/login", element: <Login Navigate to="/trip" /> },
+            { path: "/login", element: <Login /> },
             { path: "/register", element: <Register /> },
             { path: "*", element: <Navigate to="/" /> },
         ],
-    },
-    // {
-    //     path: "/trip", element: <TripLayout />,
-    //     children: [
-    //         { index: true, element: <CreateTrip /> }
-    //     ]
-    // },
+    }
 ]);
 
 const userRouter = createBrowserRouter([
@@ -38,6 +33,7 @@ const userRouter = createBrowserRouter([
         path: "/", element: <TripLayout />,
         children: [
             { index: true, element: <CreateTrip /> },
+            { path: "/view-trip/:tripId", element: <ViewTrip /> },
             { path: "*", element: <Navigate to="/" /> },
         ]
     },
