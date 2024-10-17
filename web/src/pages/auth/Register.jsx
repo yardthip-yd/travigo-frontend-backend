@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom";
 
 // Import Store
 import useAuthStore from "@/stores/authStore";
@@ -20,6 +21,9 @@ const Register = () => {
         password: "",
         confirmPassword: ""
     })
+
+    // Navigate
+    const navigate = useNavigate();
 
     // Fn handleChange update input when user fill information
     const hdlChange = (e) => {
@@ -44,7 +48,7 @@ const Register = () => {
                 // return alert("Password do not match")
                 return toast.info("Password do not match")
             }
-            
+
             // Send information input
             const result = await actionRegister(input)
 
@@ -59,6 +63,8 @@ const Register = () => {
 
             console.log("Register Successful!")
             toast.success("Register Successful!")
+
+            // navigate(`/login`)
 
         } catch (err) {
             const errMsg = err.response?.data?.error || err.message
@@ -89,7 +95,7 @@ const Register = () => {
                     </div>
 
                     {/* Form Register */}
-                    <form 
+                    <form
                         className="px-8 flex flex-col gap-3 relative pb-8"
                         onSubmit={hdlRegister}
                     >

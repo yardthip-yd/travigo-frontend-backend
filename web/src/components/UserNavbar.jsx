@@ -25,6 +25,7 @@ const TripNavbar = () => {
                     <a className="btn btn-ghost text-xl">daisyUI</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
+                {/*
                     <ul className="px-1 flex space-x-4 gap-4">
                         <li className="relative group transition-colors">
                             <Link
@@ -32,11 +33,11 @@ const TripNavbar = () => {
                                 className="no-underline hover:text-blue-500 transition-colors duration-300"
                             >
                                 <p>Create Trip</p>
-                                {/* Underline effect */}
+                                {/* Underline effect 
                                 <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </Link>
-                        </li>
-                    </ul>
+                       </li>
+                    </ul> */}
                 </div>
                 <div className="navbar-end gap-4">
                     <p className='font-bold'>Hello! {user.firstName}</p>
@@ -53,6 +54,9 @@ const TripNavbar = () => {
                         >
                             <li>
                                 <a>My Account</a>
+                            </li>
+                            <li>
+                                <a>My Trip</a>
                             </li>
                             <li onClick={actionLogout}>
                                 <a>Logout</a>

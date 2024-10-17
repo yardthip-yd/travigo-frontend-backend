@@ -11,18 +11,18 @@ const Navbar = () => {
                     <a className="btn btn-ghost text-xl">daisyUI</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                    <ul className="px-1 flex space-x-4 gap-4">
+                    {/*  <ul className="px-1 flex space-x-4 gap-4">
                         <li className="relative group transition-colors">
                             <Link
                                 to={"/"}
                                 className="no-underline hover:text-blue-500 transition-colors duration-300"
                             >
                                 <p>Home</p>
-                                {/* Underline effect */}
+                                {/* Underline effect
                                 <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </Link>
                         </li>
-                    </ul>
+                    </ul> */}
                 </div>
                 <div className="navbar-end gap-4">
 

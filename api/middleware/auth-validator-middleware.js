@@ -5,6 +5,12 @@ const createError = require("../utils/create-error")
 // Validation
 
 const registerSchema = Joi.object({
+    firstName: Joi.string().required().messages({
+        "string.empty": "Firstname is required",
+    }),
+    lastName: Joi.string().required().messages({
+        "string.empty": "Lastname is required",
+    }),
     email: Joi.string().email({ tlds: false }).required().messages({
         "string.empty": "Email is required",
     }),
