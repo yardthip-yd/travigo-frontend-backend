@@ -71,12 +71,16 @@ authController.login = tryCatch(async (req, res) => {
     const genToken = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "30d"
     })
-    console.log("Generate Token", genToken)
+    console.log("Generate Token from auth-cont", genToken)
 
     const { createdAt, updatedAt,...userData } = findUser
 
     // res.send("Hello Login");
     res.json({ token: genToken, user: userData})
 });
+
+authController.currentUser = tryCatch(async(req, res) =>{
+    res.json({ message: "Hello current user", user: req.user })
+})
 
 module.exports = authController;
