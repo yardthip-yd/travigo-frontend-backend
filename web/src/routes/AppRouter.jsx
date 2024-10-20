@@ -11,6 +11,9 @@ import Home from "@/pages/Home";
 import Register from "@/pages/auth/Register";
 import Login from "@/pages/auth/Login";
 import ViewTrip from "@/pages/trip/[tripId]/ViewTrip";
+import MyTrip from "@/pages/trip/MyTrip";
+import UserAccount from "@/pages/account/UserAccount";
+import AdminAccount from "@/pages/account/AdminAccount";
 
 // Import store
 import useAuthStore from "@/stores/authStore";
@@ -34,10 +37,14 @@ const userRouter = createBrowserRouter([
         children: [
             { index: true, element: <CreateTrip /> },
             { path: "/view-trip/:tripId", element: <ViewTrip /> },
+            { path: "/my-trip/", element: <MyTrip /> },
+            { path: "/user/account", element: <UserAccount /> },
+            { path: "/admin/account", element: <AdminAccount /> },
             { path: "*", element: <Navigate to="/" /> },
         ]
     },
 ])
+
 
 // Export AppRoute
 const AppRoute = () => {

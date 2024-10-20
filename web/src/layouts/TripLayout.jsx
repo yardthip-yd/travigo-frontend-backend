@@ -4,7 +4,6 @@ import { Outlet } from "react-router-dom";
 
 //Import Components
 import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
 import UserNavbar from '@/components/UserNavbar';
 
 const TripLayout = () => {

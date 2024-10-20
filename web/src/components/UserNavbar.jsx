@@ -6,7 +6,7 @@ import Avatar from '@/components/Avatar'
 // Import store
 import useAuthStore from '@/stores/authStore'
 
-const TripNavbar = () => {
+const UserNavbar = () => {
 
     // State from Stores
     const user = useAuthStore((state) => state.user)
@@ -52,8 +52,9 @@ const TripNavbar = () => {
                             tabIndex={0}
                             className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                         >
+                            {/* Conditional rendering for My Account link */}
                             <li>
-                                <a>My Account</a>
+                                <Link to={user.role === 'admin' ? '/admin/account' : '/user/account'}>My Account</Link>
                             </li>
                             <li>
                                 <a>My Trip</a>
@@ -70,4 +71,4 @@ const TripNavbar = () => {
     )
 }
 
-export default TripNavbar
+export default UserNavbar
