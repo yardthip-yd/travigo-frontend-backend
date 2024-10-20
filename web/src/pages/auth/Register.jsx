@@ -64,7 +64,7 @@ const Register = () => {
             console.log("Register Successful!")
             toast.success("Register Successful!")
 
-            // navigate(`/login`)
+            navigate(`/login`)
 
         } catch (err) {
             const errMsg = err.response?.data?.error || err.message

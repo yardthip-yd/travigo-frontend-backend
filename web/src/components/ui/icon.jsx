@@ -120,3 +120,22 @@ export function AvatarIcon(props) {
       </svg>
     );
 }
+
+export function PhotoIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 14 14"
+      fill="#fff"
+      stroke="#fff"
+      {...props}
+    >
+      <path
+        d="M5.5 1.5c-1 0-1.186.579-1.5 1.75h6C9.675 2.035 9.466 1.5 8.5 1.5zM3 4C1 4 0 5 0 7v2c0 2 1 3 3 3h8c2 0 3-1 3-3V7c0-2-1-3-3-3zm-.5 1a.5.5 0 110 1 .5.5 0 010-1zM7 5c1.64 0 3 1.262 3 3 0 1.708-1.326 3-3 3-1.64 0-3-1.321-3-3 0-1.768 1.331-3 3-3zm0 1c-1.148 0-2 .792-2 2 0 1.237.822 2 2 2 1.208 0 2-.792 2-2 0-1.178-.822-2-2-2z"
+        fill="#fff"
+        fillOpacity={1}
+        stroke="none"
+      />
+    </svg>
+  );
+}

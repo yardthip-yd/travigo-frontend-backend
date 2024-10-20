@@ -1,22 +1,36 @@
 // Import
-import React, { useEffect } from 'react'
-import { Link } from "react-router-dom"
-import Avatar from '@/components/Avatar'
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import Avatar from "@/components/Avatar";
+import { useNavigate } from "react-router-dom";
 
 // Import store
-import useAuthStore from '@/stores/authStore'
+import useAuthStore from "@/stores/authStore";
 
 const UserNavbar = () => {
-
     // State from Stores
-    const user = useAuthStore((state) => state.user)
-    const actionLogout = useAuthStore((state) => state.actionLogout)
+    const user = useAuthStore((state) => state.user);
+    const actionLogout = useAuthStore((state) => state.actionLogout);
 
     // useEffect(() => {
     //     if (user) {
     //         console.log("Current user:", user);
     //     }
     // }, [user]);
+
+    // console.log("User role:", user.role);
+
+    // Navigate
+    const navigate = useNavigate();
+
+    // Fn for Navigate
+    const hdlSettingClick = () => {
+        if (user.role === "ADMIN") {
+            navigate("/admin/account");
+        } else {
+            navigate("/user/account");
+        }
+    };
 
     return (
         <div>
@@ -25,7 +39,7 @@ const UserNavbar = () => {
                     <a className="btn btn-ghost text-xl">daisyUI</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                {/*
+                    {/*
                     <ul className="px-1 flex space-x-4 gap-4">
                         <li className="relative group transition-colors">
                             <Link
@@ -39,8 +53,8 @@ const UserNavbar = () => {
                        </li>
                     </ul> */}
                 </div>
-                <div className="navbar-end gap-4">
-                    <p className='font-bold'>Hello! {user.firstName}</p>
+                <div className="navbar-end gap-4 mx-4">
+                    <p className="font-bold">Hello! {user.firstName}</p>
                     <div className="dropdown dropdown-end mt-2">
                         <div tabIndex={0} role="button">
                             <Avatar
@@ -52,23 +66,22 @@ const UserNavbar = () => {
                             tabIndex={0}
                             className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                         >
-                            {/* Conditional rendering for My Account link */}
-                            <li>
-                                <Link to={user.role === 'admin' ? '/admin/account' : '/user/account'}>My Account</Link>
-                            </li>
                             <li>
                                 <a>My Trip</a>
+                            </li>
+                            {/* Conditional rendering for My Account link */}
+                            <li onClick={hdlSettingClick}>
+                                <a>Setting</a>
                             </li>
                             <li onClick={actionLogout}>
                                 <a>Logout</a>
                             </li>
                         </ul>
                     </div>
-
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default UserNavbar
+export default UserNavbar;

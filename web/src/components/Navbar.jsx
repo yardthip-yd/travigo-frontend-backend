@@ -24,7 +24,7 @@ const Navbar = () => {
                         </li>
                     </ul> */}
                 </div>
-                <div className="navbar-end gap-4">
+                <div className="navbar-end gap-4 mx-4">
 
                     <Link to={"/register"} className="btn btn-outline text-blue-500 rounded-full w-32 gap-2 outline outline-blue-500 outline-2 bg-white hover:bg-white hover:text-blue-500">
                         Register
