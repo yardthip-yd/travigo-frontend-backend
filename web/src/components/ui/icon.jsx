@@ -139,3 +139,30 @@ export function PhotoIcon(props) {
     </svg>
   );
 }
+
+export function DotIcon(props) {
+  return (
+    <svg
+      fill="#000"
+      viewBox="0 0 32 32"
+      xmlSpace="preserve"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M16 13c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3zM6 13c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3zM26 13c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z" />
+    </svg>
+  );
+}
+export function PlaceIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#0ea5e9"
+      viewBox="0 0 24 24"
+      stroke="#fff"
+      {...props}
+    >
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z" />
+    </svg>
+  );
+}
