@@ -50,18 +50,19 @@ const saveTripData = async (tripData) => {
     // Save itinerary in the database
     if (tripData.jsonResponse?.itinerary && tripData.jsonResponse.itinerary.length > 0) {
         for (const day of tripData.jsonResponse.itinerary) {
-            for (const plan of day.plan) {
+            for (const plan of day.DayPlan) {
                 await prisma.itinerary.create({
                     data: {
                         tripId: trip.id,
-                        day: day.day, // Day of the itinerary
+                        day: day.Day, // Day of the itinerary
                         placeName: plan.PlaceName,
                         placeDescription: plan.PlaceDetails,
                         placeImageUrl: plan.PlaceImageURL,
                         ticketPrice: parseFloat(plan.TicketPricing) || 0,
-                        bestTimeToVisit: day.bestTimeToVisit || "Unknown",
                         latitude: parseFloat(plan.PlaceGeoCoordinates.latitude),
-                        longtitude: parseFloat(plan.PlaceGeoCoordinates.longitude),
+                        longtitude: parseFloat(plan.PlaceGeoCoordinates.longitude), 
+                        startTime: plan.StartTime,
+                        endTime: plan.EndTime,
                     },
                 });
             }

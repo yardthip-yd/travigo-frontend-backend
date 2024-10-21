@@ -275,7 +275,8 @@ const CreateTrip = () => {
 
                                     {BudgetOpt.map((item, index) => (
                                         <option key={index} value={item.title}>
-                                            {item.title} ({item.description})
+                                            {item.title} 
+                                            {/* ({item.description}) */}
                                         </option>
                                     ))}
 
