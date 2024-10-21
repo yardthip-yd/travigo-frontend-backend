@@ -64,18 +64,18 @@ const UserProfile = () => {
 
   // Fn for handle form submis to update user profile
   const hdlUpdateProfile = async () => {
-    const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
+    const updatedData = new FormData();
+    updatedData.append("firstName", firstName);
+    updatedData.append("lastName", lastName);
+    updatedData.append("email", email);
     if (password) {
-      formData.append("password", password);
+      updatedData.append("password", password);
     }
     if (profileImage) {
-      formData.append("profileImage", profileImage);
+      updatedData.append("profileImage", profileImage);
     }
 
-    await actionUpdateUser(formData); // Call the action to update user profile
+    await actionUpdateUser(updatedData); // Call the action to update user profile
     toast.success("Profile updated successfully!");
   };
 

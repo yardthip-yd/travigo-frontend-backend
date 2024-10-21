@@ -61,7 +61,7 @@ const useAuthStore = create(
                 // console.log("Token updateme:", token); 
 
                 if (!token) return; // Ensure token exists
-                const response = await axios.put(
+                const response = await axios.patch(
                     "http://localhost:9900/auth/updateme",
                     input,
                     {

@@ -8,6 +8,7 @@ const authenticate = tryCatch(async(req, res, next) => {
 
     // Check headers that has token sending
     const authorization = req.headers.authorization
+    console.log("Authorization Header:", authorization);
 
     if (!authorization || !authorization.startsWith('Bearer ')) {
         return createError(401, 'Unauthorized')
@@ -19,9 +20,10 @@ const authenticate = tryCatch(async(req, res, next) => {
     // Decode which is verify token
     const payload = jwt.verify(token, process.env.JWT_SECRET)
 
-    // console.log("Payload from authen", payload)
+    console.log("Payload from authen", payload)
 
     const foundUser = await prisma.user.findUnique({ where: { id: payload.id } })
+    console.log("Found User:", foundUser);
     if (!foundUser) {
         return createError(401, 'Unauthorized')
     }

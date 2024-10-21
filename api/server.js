@@ -11,6 +11,7 @@ const gaiRoute = require("./routes/gai-route");
 // Import Routing
 const authRoute = require("./routes/auth-route");
 const tripRoute = require("./routes/trip-route");
+const memberRoute = require("./routes/member-route");
 
 // Import Error
 const errorMiddleware = require("../api/middleware/error-middleware");
@@ -27,6 +28,7 @@ app.use("/api", gaiRoute)
 // Import Routing
 app.use("/auth", authRoute)
 app.use("/trip", tripRoute)
+app.use("/member", memberRoute)
 
 // Error Middleware
 app.use(errorMiddleware);

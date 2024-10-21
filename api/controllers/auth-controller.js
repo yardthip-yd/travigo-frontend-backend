@@ -92,6 +92,8 @@ authController.updateUser = tryCatch(async (req, res) => {
     const userId = req.user.id;
     const { firstName, lastName, email, password } = req.body;
 
+    console.log("Received update request from auth-cont:", req.body);
+
     // 1. Check user exists in the database
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -111,7 +113,7 @@ authController.updateUser = tryCatch(async (req, res) => {
         updatedData.password = hashedPassword;
     }
 
-    // 4. Check if an avatar exists and handle the upload
+    // 4. Check if an avatar exists and handle profile image upload if a new file is provided
     if (req.file) {
         console.log("File uploaded:", req.file);
 
@@ -154,7 +156,7 @@ authController.updateUser = tryCatch(async (req, res) => {
         }
     }
 
-    // Update the user in the database
+    // 5. Update the user in the database
     await prisma.user.update({
         where: { id: userId },
         data: updatedData,
