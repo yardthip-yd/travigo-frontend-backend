@@ -59,9 +59,9 @@ const IntroViewTrip = ({ trip }) => {
                 <div className="flex justify-between">
                     <p className="font-bold text-2xl">{trip.destination}</p>
                     <MenuMainTrip
+                        tripId={trip.id}
                         onEdit={() => console.log("Edit Plan")}
-                        onDelete={() => console.log("Delete Plan")}
-                        onClose={() => {}}
+                        onClose={() => { }}
                     />
                 </div>
                 <div className="flex gap-2">

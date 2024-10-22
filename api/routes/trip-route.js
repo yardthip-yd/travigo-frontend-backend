@@ -17,5 +17,6 @@ tripRoute.get("/view-trip/:tripId", authenticate, tripController.getTrip)
 
 // Route for My Trip
 tripRoute.get("/user-trip", authenticate, tripController.getUserTrips);
+tripRoute.delete("/delete", authenticate, tripController.deleteTrip);
 
 module.exports = tripRoute

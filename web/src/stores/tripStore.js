@@ -33,7 +33,7 @@ const useTripStore = create((set) => ({
     },
     viewTrip: async (tripId) => {
         try {
-            const token = useAuthStore.getState().token; 
+            const token = useAuthStore.getState().token;
             const response = await axios.get(`http://localhost:9900/trip/view-trip/${tripId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -60,7 +60,30 @@ const useTripStore = create((set) => ({
             set({ trips: response.data.trips, loading: false });
         } catch (error) {
             console.error('Error fetching user trips:', error);
-            set({ error: error.message, loading: false }); 
+            set({ error: error.message, loading: false });
+        }
+    },
+    actionDeleteTrip: async (tripId) => {
+        try {
+            const token = useAuthStore.getState().token;
+            const response = await axios.delete(`http://localhost:9900/trip/delete`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                data: { tripId }
+            });
+    
+
+        set((state) => ({
+            trips: state.trips.filter(trip => trip.id !== tripId), 
+        }));
+
+        console.log("Delete trip in Zustand", response.data);
+        
+        } catch (error) {
+            console.error('Error deleting trip:', error);
+            throw error;
         }
     },
 }));

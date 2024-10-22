@@ -1,11 +1,21 @@
 // Import
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom"; 
 import { DotIcon } from "@/components/ui/icon";
 
-const MenuMainTrip = ({ onEdit, onDelete, onClose }) => {
+// Import Store
+import useTripStore from "@/stores/tripStore";
+
+const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
 
     // State for open/close dropdown
     const [isOpen, setIsOpen] = useState(false);
+
+    // State from Stores
+    const { actionDeleteTrip } = useTripStore(); 
+
+     // Navigate
+    const navigate = useNavigate();
 
     // Fn for toggle dropdown
     const toggleDropdown = () => {
@@ -16,6 +26,18 @@ const MenuMainTrip = ({ onEdit, onDelete, onClose }) => {
     const hdlCloseDropdown = () => {
         setIsOpen(false);
         onClose();
+    };
+
+    // Fn for handle delete
+    const hdlDelete = async () => {
+        try {
+            await actionDeleteTrip(tripId);
+            console.log("Trip deleted successfully");
+            hdlCloseDropdown();
+            navigate('/my-trip')
+        } catch (error) {
+            console.error("Error deleting trip:", error);
+        }
     };
 
     return (
@@ -36,7 +58,7 @@ const MenuMainTrip = ({ onEdit, onDelete, onClose }) => {
                         <a onClick={onEdit}>Edit Plan</a>
                     </li>
                     <li>
-                        <a onClick={onDelete}>Delete Plan</a>
+                        <a onClick={hdlDelete}>Delete Plan</a>
                     </li>
                     <li>
                         <a onClick={hdlCloseDropdown}>Close</a>
