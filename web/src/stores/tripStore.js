@@ -2,15 +2,20 @@
 import axios from "axios"
 import { create } from "zustand"
 
+import useAuthStore from "@/stores/authStore";
+
 const useTripStore = create((set) => ({
     trips: [],
     createTrip: async (tripData) => {
         try {
+            const token = useAuthStore.getState().token;
             const response = await axios.post('http://localhost:9900/trip/create-trip', tripData, {
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
             });
+
 
             // Update the trips state
             set((state) => ({
@@ -28,14 +33,34 @@ const useTripStore = create((set) => ({
     },
     viewTrip: async (tripId) => {
         try {
-            const response = await axios.get(`http://localhost:9900/trip/view-trip/${tripId}`);
-
+            const token = useAuthStore.getState().token; 
+            const response = await axios.get(`http://localhost:9900/trip/view-trip/${tripId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             console.log("View trip in Zustand", response.data)
 
             return response.data; // Return trip details
         } catch (error) {
             console.error('Error fetching view trip:', error);
             throw error;
+        }
+    },
+    actionGetUserTrips: async () => {
+        set({ loading: true });
+        try {
+            const token = useAuthStore.getState().token;
+            const response = await axios.get('http://localhost:9900/trip/user-trip', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            set({ trips: response.data.trips, loading: false });
+        } catch (error) {
+            console.error('Error fetching user trips:', error);
+            set({ error: error.message, loading: false }); 
         }
     },
 }));

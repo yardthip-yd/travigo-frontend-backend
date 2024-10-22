@@ -38,7 +38,7 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
         const data = {
             textQuery: hotel.hotelName,
         };
-        console.log("Trip data", trip);
+        // console.log("Trip data", trip);
 
         try {
             const result = await GetPlaceDetails(data);
@@ -61,7 +61,7 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
     return (
         <div className="bg-white rounded-xl shadow-xl w-[1080px] p-2 flex flex-col gap-2">
             <h2 className="font-bold text-xl">Hotel Recommendations</h2>
-            <div className="flex space-x-8 my-4 overflow-auto py-4">
+            <div className="flex space-x-8 overflow-auto py-4">
                 {hotels.map((hotel) => (
                     <Link
                         key={hotel.id}

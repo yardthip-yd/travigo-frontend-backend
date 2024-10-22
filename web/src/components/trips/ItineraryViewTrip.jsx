@@ -69,18 +69,18 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
                     return acc;
                 }, []).map((group) => (
                     <div key={group.day} className="my-2">
-                        <p className="font-semibold mb-2">Day {group.day}</p>
+                        <p className="font-semibold mb-2 p-4">Day {group.day}</p>
                         {group.places.map((itinerary) => (
                             <div key={itinerary.id} className="flex items-start mb-4 rounded-2xl shadow-xl">
-                                <div className="flex-grow flex">
+                                <div className="flex-grow flex gap-2">
                                     <img
                                         src={itineraryPhotos[itinerary.id]}
                                         alt={itinerary.placeName}
-                                        className="h-48 rounded-l-2xl min-w-80 object-cover"
+                                        className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
                                     />
-                                    <div>
-                                        <p>Visit Time: {itinerary.startTime} - {itinerary.endTime}</p>
-                                        <h3 className="font-semibold">{itinerary.placeName}</h3>
+                                    <div className="px-8 m-auto flex flex-col gap-2">
+                                        <p className="text-blue-500 font-semibold">{itinerary.startTime} - {itinerary.endTime}</p>
+                                        <h3 className="font-bold">{itinerary.placeName}</h3>
                                         <p>{itinerary.placeDescription}</p>
                                         <p>Ticket Price: THB {itinerary.ticketPrice}</p>
                                     </div>

@@ -10,7 +10,7 @@ import CreateTrip from "@/pages/trip/CreateTrip";
 import Home from "@/pages/Home";
 import Register from "@/pages/auth/Register";
 import Login from "@/pages/auth/Login";
-import ViewTrip from "@/pages/trip/[tripId]/ViewTrip";
+import ViewTrip from "@/pages/trip/ViewTrip";
 import MyTrip from "@/pages/trip/MyTrip";
 import UserAccount from "@/pages/account/UserAccount";
 import AdminAccount from "@/pages/account/AdminAccount";

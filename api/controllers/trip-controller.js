@@ -44,4 +44,32 @@ tripController.getTrip = tryCatch(async (req, res) => {
     // res.json(trip);
 });
 
+tripController.getUserTrips = tryCatch(async (req, res) => {
+
+    // console.log("Request User:", req.user)
+    const userId = req.user.id; 
+
+    if (!userId) {
+        return createError(400, "User ID is required");
+    }
+
+    // console.log("User Id from controller", userId)
+
+    const trips = await prisma.trip.findMany({
+        where: {
+            userId: userId, 
+        },
+        include: {
+            Hotel: true,
+            Itinerary: true,
+        },
+    });
+
+    if (trips.length === 0) {
+        return createError(404, "No trips found for this user");
+    }
+
+    res.json({ message: "Get user trips successful", trips });
+});
+
 module.exports = tripController;

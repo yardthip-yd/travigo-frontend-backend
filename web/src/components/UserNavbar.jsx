@@ -39,7 +39,7 @@ const UserNavbar = () => {
                     <a className="btn btn-ghost text-xl">daisyUI</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                    {/*
+
                     <ul className="px-1 flex space-x-4 gap-4">
                         <li className="relative group transition-colors">
                             <Link
@@ -47,11 +47,21 @@ const UserNavbar = () => {
                                 className="no-underline hover:text-blue-500 transition-colors duration-300"
                             >
                                 <p>Create Trip</p>
-                                {/* Underline effect 
+                                {/* Underline effect */}
                                 <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </Link>
-                       </li>
-                    </ul> */}
+                        </li>
+                        <li className="relative group transition-colors">
+                            <Link
+                                to={"/my-trip"}
+                                className="no-underline hover:text-blue-500 transition-colors duration-300"
+                            >
+                                <p>My Trip</p>
+                                {/* Underline effect */}
+                                <span className="absolute left-0 right-0 bottom-[-6px] h-1 shadow-md bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
                 <div className="navbar-end gap-4 mx-4">
                     <p className="font-bold">Hello! {user.firstName}</p>
@@ -67,7 +77,9 @@ const UserNavbar = () => {
                             className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                         >
                             <li>
-                                <a>My Trip</a>
+                                <Link to={"/my-trip"}>
+                                    <p>My Trip</p>
+                                </Link>
                             </li>
                             {/* Conditional rendering for My Account link */}
                             <li onClick={hdlSettingClick}>

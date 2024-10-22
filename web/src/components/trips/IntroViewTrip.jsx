@@ -1,7 +1,7 @@
 // Import
 import React, { useEffect, useState } from "react";
-import { DotIcon } from "@/components/ui/icon";
 import DefaultImage from "@/assets/image/pixabay.jpg";
+import MenuMainTrip from "@/components/trips/MenuMainTrip";
 
 // Import GPlace
 import { googlePlaceKey } from "@/services/GPlaceService";
@@ -20,10 +20,10 @@ const IntroViewTrip = ({ trip }) => {
         }
     }, [trip]);
 
-    // Fn for get place photo 
+    // Fn for get place photo
     const GetPlacePhoto = async () => {
         const data = {
-            textQuery: trip?.destination
+            textQuery: trip?.destination,
         };
         // console.log("Trip data", trip);
 
@@ -32,9 +32,9 @@ const IntroViewTrip = ({ trip }) => {
             // console.log("Result data", result.data);
             // console.log("Result data", result.data.places[0].photos[3].name);
 
-            const apiKey = await googlePlaceKey()
+            const apiKey = await googlePlaceKey();
 
-            const photoName = result.data.places[0]?.photos[3]?.name;
+            const photoName = result.data.places[0]?.photos[0]?.name;
             // console.log("Photo Name", photoName)
 
             if (photoName) {
@@ -49,35 +49,20 @@ const IntroViewTrip = ({ trip }) => {
         return DefaultImage;
     };
 
-
     return (
         <div className="bg-white rounded-xl shadow-xl w-[1080px]">
             <img
                 src={photoUrl}
                 className="min-w-[1080px] h-[300px] rounded-xl shadow-xl object-cover"
             ></img>
-            <div className="p-2 flex flex-col gap-2">
+            <div className="p-4 flex flex-col gap-2">
                 <div className="flex justify-between">
                     <p className="font-bold text-2xl">{trip.destination}</p>
-                    <div className="dropdown dropdown-end dropdown-hover">
-                        <div tabIndex={0} role="button">
-                            <DotIcon className="w-6 cursor-pointer" />
-                        </div>
-                        <ul
-                            tabIndex={0}
-                            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-center"
-                        >
-                            <li>
-                                <a>Edit Plan</a>
-                            </li>
-                            <li>
-                                <a>Delete Plan</a>
-                            </li>
-                            <li>
-                                <a onClick={() => console.log("Close")}>Close</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <MenuMainTrip
+                        onEdit={() => console.log("Edit Plan")}
+                        onDelete={() => console.log("Delete Plan")}
+                        onClose={() => {}}
+                    />
                 </div>
                 <div className="flex gap-2">
                     <div className="badge bg-blue-100 font-semibold px-4">
@@ -92,7 +77,7 @@ const IntroViewTrip = ({ trip }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default IntroViewTrip
+export default IntroViewTrip;
