@@ -25,6 +25,7 @@ const guestRouter = createBrowserRouter([
         path: "/", element: <PageLayout />,
         children: [
             { index: true, element: <Home /> },
+            { path: "/trip", element: <CreateTrip /> },
             { path: "/login", element: <Login /> },
             { path: "/register", element: <Register /> },
             { path: "/reset-password/:token", element: <ResetPassword /> },
@@ -38,8 +39,9 @@ const userRouter = createBrowserRouter([
         path: "/", element: <TripLayout />,
         children: [
             { index: true, element: <CreateTrip /> },
+            { path: "/home", element: <Home /> },
             { path: "/view-trip/:tripId", element: <ViewTrip /> },
-            { path: "/my-trip/", element: <MyTrip /> },
+            { path: "/my-trip", element: <MyTrip /> },
             { path: "/user/account", element: <UserAccount /> },
             { path: "/admin/account", element: <AdminAccount /> },
             { path: "*", element: <Navigate to="/" /> },
@@ -50,8 +52,6 @@ const userRouter = createBrowserRouter([
 
 // Export AppRoute
 const AppRoute = () => {
-
-    console.log("AppRoute is rendering");
     
     // State for use authStore
     const user = useAuthStore((state) => state.user)

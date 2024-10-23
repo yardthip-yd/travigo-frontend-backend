@@ -1,7 +1,7 @@
 // Import
 import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
-import DefaultImage from "@/assets/image/pixabay.jpg";
+import DefaultImage from "@/assets/image/pixabay.gif";
 import { Link } from "react-router-dom";
 
 // Import component for update and delete

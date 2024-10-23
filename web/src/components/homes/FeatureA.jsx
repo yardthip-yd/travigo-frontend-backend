@@ -1,5 +1,6 @@
 import React from "react";
 import { CorrectIcon } from "../ui/icon";
+import FeatureAImage from "@/assets/image/FeatureA.jpg";
 
 const FeatureA = () => {
     return (
@@ -9,8 +10,8 @@ const FeatureA = () => {
                 {/* Picture Step 1 */}
                 <div className="w-full flex justify-center">
                     <img
-                        className="rounded-xl shadow-xl w-[400px] h-[400px]"
-                        src={"https://picsum.photos/400/400"}
+                        className="rounded-xl shadow-xl w-[400px] h-[400px] object-cover"
+                        src={FeatureAImage}
                         alt="img"
                     />
                 </div>

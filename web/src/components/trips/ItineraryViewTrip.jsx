@@ -1,6 +1,6 @@
 // Import
 import React, { useEffect, useState } from "react";
-import DefaultImage from "@/assets/image/pixabay.jpg";
+import DefaultImage from "@/assets/image/pixabay.gif";
 
 // Import GPlace
 import { googlePlaceKey } from "@/services/GPlaceService";
@@ -74,7 +74,7 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
                             <div key={itinerary.id} className="flex items-start mb-4 rounded-2xl shadow-xl">
                                 <div className="flex-grow flex gap-2">
                                     <img
-                                        src={itineraryPhotos[itinerary.id]}
+                                        src={itineraryPhotos[itinerary.id] || DefaultImage}
                                         alt={itinerary.placeName}
                                         className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
                                     />

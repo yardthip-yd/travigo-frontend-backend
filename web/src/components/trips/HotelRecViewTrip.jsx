@@ -1,13 +1,16 @@
 // Import
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import DefaultImage from "@/assets/image/pixabay.jpg";
+import DefaultImage from "@/assets/image/pixabay.gif";
 
 // Import GPlace
 import { googlePlaceKey } from "@/services/GPlaceService";
 
 // Import GPlace Photo
 import { GetPlaceDetails, PHOTO_REF_URL } from "@/services/GMPlaceService";
+
+// Import Icon
+import { MapIcon } from "@/components/ui/icon";
 
 const HotelRecViewTrip = ({ trip, hotels }) => {
 
@@ -45,7 +48,7 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
             // console.log("Result data", result.data);
             const apiKey = await googlePlaceKey();
 
-            if (result.data.places && result.data.places.length > 0 && result.data.places[0].photos)  {
+            if (result.data.places && result.data.places.length > 0 && result.data.places[0].photos) {
                 const photoName = result.data.places[0].photos[0]?.name;
 
                 if (photoName) {
@@ -70,43 +73,54 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
                     >
                         <div className="card card-compact bg-base-100 shadow-xl w-80 flex-shrink-0 hover:scale-105 transition-all">
                             <figure>
-                                <img src={hotelPhotos[hotel.id]} className="h-[200px] w-full object-cover"/>
+                                <img src={hotelPhotos[hotel.id] || DefaultImage} className="h-[200px] w-full object-cover" />
                             </figure>
                             <div className="card-body  min-h-[190px]">
-                                <h2>{hotel.hotelName}</h2>
+                                <h2 className="text-base font-semibold">{hotel.hotelName}</h2>
                                 <p>Address: {hotel.hotelAddress}</p>
                                 <p>Price: THB {hotel.hotelPrice} per day</p>
-                                <div className="items-center flex gap-2">
-                                    <div className="rating rating-sm rating-half">
-                                        {Array.from({ length: 5 }, (_, index) => {
-                                            const fullStar = index + 1;
-                                            const halfStar = index + 0.5;
-                                            return (
-                                                <React.Fragment key={index}>
-                                                    <input
-                                                        type="radio"
-                                                        name={`rating-${hotel.id}`}
-                                                        className="mask mask-star-2 mask-half-1 bg-blue-500"
-                                                        defaultChecked={
-                                                            hotel.hotelRating === halfStar ||
-                                                            hotel.hotelRating === fullStar
-                                                        }
-                                                        disabled
-                                                    />
-                                                    <input
-                                                        type="radio"
-                                                        name={`rating-${hotel.id}`}
-                                                        className="mask mask-star-2 mask-half-2 bg-blue-500"
-                                                        defaultChecked={
-                                                            hotel.hotelRating === fullStar
-                                                        }
-                                                        disabled
-                                                    />
-                                                </React.Fragment>
-                                            );
-                                        })}
+                                <div className="flex justify-between">
+                                    {/* Star */}
+                                    <div className="items-center flex gap-2">
+                                        <div className="rating rating-sm rating-half">
+                                            {Array.from({ length: 5 }, (_, index) => {
+                                                const fullStar = index + 1;
+                                                const halfStar = index + 0.5;
+                                                return (
+                                                    <React.Fragment key={index}>
+                                                        <input
+                                                            type="radio"
+                                                            name={`rating-${hotel.id}`}
+                                                            className="mask mask-star-2 mask-half-1 bg-blue-500"
+                                                            defaultChecked={
+                                                                hotel.hotelRating === halfStar ||
+                                                                hotel.hotelRating === fullStar
+                                                            }
+                                                            disabled
+                                                        />
+                                                        <input
+                                                            type="radio"
+                                                            name={`rating-${hotel.id}`}
+                                                            className="mask mask-star-2 mask-half-2 bg-blue-500"
+                                                            defaultChecked={
+                                                                hotel.hotelRating === fullStar
+                                                            }
+                                                            disabled
+                                                        />
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </div>
+                                        <p>{hotel.hotelRating} Stars</p>
                                     </div>
-                                    <p>{hotel.hotelRating} Stars</p>
+                                    {/* Map */}
+                                    <Link
+                                        key={hotel.id}
+                                        to={`https://www.google.com/maps/search/?api=1&query=${hotel.hotelName}`}
+                                        target="_blank"
+                                    >
+                                        <MapIcon className="h-10 w-10" />
+                                    </Link>
                                 </div>
                             </div>
                         </div>

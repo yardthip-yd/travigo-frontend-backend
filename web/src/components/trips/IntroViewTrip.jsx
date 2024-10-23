@@ -1,6 +1,6 @@
 // Import
 import React, { useEffect, useState } from "react";
-import DefaultImage from "@/assets/image/pixabay.jpg";
+import DefaultImage from "@/assets/image/pixabay.gif";
 import MenuMainTrip from "@/components/trips/MenuMainTrip";
 
 // Import GPlace
@@ -52,7 +52,7 @@ const IntroViewTrip = ({ trip }) => {
     return (
         <div className="bg-white rounded-xl shadow-xl w-[1080px]">
             <img
-                src={photoUrl}
+                src={photoUrl || DefaultImage}
                 className="min-w-[1080px] h-[300px] rounded-xl shadow-xl object-cover"
             ></img>
             <div className="p-4 flex flex-col gap-2">

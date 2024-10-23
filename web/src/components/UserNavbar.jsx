@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Avatar from "@/components/Avatar";
 import { useNavigate } from "react-router-dom";
 
+import LogoImage from "@/assets/image/logo.png";
+
 // Import store
 import useAuthStore from "@/stores/authStore";
 
@@ -36,7 +38,9 @@ const UserNavbar = () => {
         <div>
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
-                    <a className="btn btn-ghost text-xl">daisyUI</a>
+                    <Link to="/home" className="h-8">
+                        <img src={LogoImage} className="h-8"></img>
+                    </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
 

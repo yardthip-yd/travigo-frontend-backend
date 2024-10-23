@@ -23,6 +23,9 @@ import { BudgetIcon, DayIcon, DropdownIcon, PlaceIcon, TravelerIcon } from "@/co
 import useAuthStore from "@/stores/authStore";
 import useTripStore from "@/stores/tripStore";
 
+// Import Login Card
+import LoginCard from "@/components/auth/LoginCard";
+
 const CreateTrip = () => {
 
     // useState for store the Gplace Key as API key
@@ -40,8 +43,12 @@ const CreateTrip = () => {
     // useState for store selected Traveler option
     const [selectedTraveler, setSelectedTraveler] = useState("");
 
+    // useState for card visibility
+    const [showLoginCard, setShowLoginCard] = useState(false);
+
     // State from Stores
     const user = useAuthStore((state) => state.user)
+    const token = useAuthStore((state) => state.token)
 
     // Fetch createTrip from tripStore
     const createTrip = useTripStore((state) => state.createTrip);
@@ -70,11 +77,17 @@ const CreateTrip = () => {
         console.log(formData);
     }, [formData]);
 
+    // useEffect for checking user login status
+    useEffect(() => {
+        if (!user && !token) {
+            setShowLoginCard(true);
+        }
+    }, [user, token]);
+
     // Fn handleInputChange update Form Data when user select destination, days, budget, traveler
     const hdlInputChange = (name, value) => {
         setFormData({
             ...formData,
-            // destination: value,
             [name]: value,
         });
     };
@@ -189,7 +202,7 @@ const CreateTrip = () => {
 
                             {/* Destination */}
                             <div className="flex flex-row items-center gap-1">
-                                <PlaceIcon className="w-8 h-8"/>
+                                <PlaceIcon className="w-8 h-8" />
                                 {apiKey ? (
                                     <GooglePlacesAutocomplete
                                         apiKey={apiKey} // Use the fetched API Key
@@ -259,7 +272,7 @@ const CreateTrip = () => {
 
                             {/* Budget */}
                             <div className="flex flex-row items-center gap-1">
-                                <BudgetIcon className="w-8 h-8"/>
+                                <BudgetIcon className="w-8 h-8" />
                                 <select
                                     className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full text-slate-900"
                                     value={selectedBudget} // Set selected budget
@@ -274,7 +287,7 @@ const CreateTrip = () => {
 
                                     {BudgetOpt.map((item, index) => (
                                         <option key={index} value={item.title}>
-                                            {item.title} 
+                                            {item.title}
                                             {/* ({item.description}) */}
                                         </option>
                                     ))}
@@ -284,7 +297,7 @@ const CreateTrip = () => {
 
                             {/* Traveler */}
                             <div className="flex flex-row items-center gap-1">
-                                <TravelerIcon className="w-8 h-8"/>
+                                <TravelerIcon className="w-8 h-8" />
                                 <select
                                     className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full select-custom text-slate-900"
                                     value={selectedTraveler}
@@ -312,6 +325,9 @@ const CreateTrip = () => {
                 <div className="my-4 drop-shadow-2xl shadow-2xl absolute left-1/2 transform -translate-x-1/2 top-[calc(100%-40px)]">
                     <button className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-40 border-none" onClick={generateTrip}>Generate Trip</button>
                 </div>
+
+                {/* Login Prompt Card */}
+                {showLoginCard && <LoginCard onClose={() => setShowLoginCard(false)} />}
             </div>
         </div>
     )
