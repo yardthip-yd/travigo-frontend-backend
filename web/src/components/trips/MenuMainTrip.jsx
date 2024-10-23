@@ -1,10 +1,13 @@
 // Import
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { DotIcon } from "@/components/ui/icon";
 
 // Import Store
 import useTripStore from "@/stores/tripStore";
+
+// Impot Model
+import UpdateTripModal from "@/components/trips/UpdateTripModel"
 
 const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
 
@@ -12,9 +15,12 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     // State from Stores
-    const { actionDeleteTrip } = useTripStore(); 
+    const { actionDeleteTrip } = useTripStore();
 
-     // Navigate
+    // State from modal visibility
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Navigate
     const navigate = useNavigate();
 
     // Fn for toggle dropdown
@@ -40,6 +46,12 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
         }
     };
 
+    // Fn for handle update
+    const hdlUpdate = () => {
+        hdlCloseDropdown();
+        onEdit(tripDetails);
+    };
+
     return (
         <div className="dropdown dropdown-end dropdown-hover"
             onMouseEnter={toggleDropdown}
@@ -52,10 +64,10 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
             {isOpen && (
                 <ul
                     tabIndex={0}
-                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-center"
+                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 shadow text-center"
                 >
                     <li>
-                        <a onClick={onEdit}>Edit Plan</a>
+                        <a onClick={hdlUpdate}>Update Plan</a>
                     </li>
                     <li>
                         <a onClick={hdlDelete}>Delete Plan</a>
@@ -64,6 +76,16 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
                         <a onClick={hdlCloseDropdown}>Close</a>
                     </li>
                 </ul>
+            )}
+            {isModalOpen && (
+                <UpdateTripModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    tripDetails={tripDetails}
+                    onUpdate={(updatedData) => {
+                        // Logic to handle the update and generate new trip plan
+                    }}
+                />
             )}
         </div>
     )

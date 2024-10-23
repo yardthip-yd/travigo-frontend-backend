@@ -1,8 +1,12 @@
 // Import
 import React, { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
 import DefaultImage from "@/assets/image/pixabay.jpg";
-import MenuMainTrip from "@/components/trips/MenuMainTrip";
 import { Link } from "react-router-dom";
+
+// Import component for update and delete
+import MenuMainTrip from "@/components/trips/MenuMainTrip";
+import UpdateTripModel from "@/components/trips/UpdateTripModel";
 
 // Import Store
 import useTripStore from "@/stores/tripStore";
@@ -13,12 +17,20 @@ import { googlePlaceKey } from "@/services/GPlaceService";
 // Import GPlace Photo
 import { GetPlaceDetails, PHOTO_REF_URL } from "@/services/GMPlaceService";
 
+// Import GAI
+import { createChatSession } from "@/services/GAiService"
+import AI_PROMPT from "@/components/options/AiGen";
+
 const UserCardMyTrip = () => {
     // State from Stores
-    const { trips, actionGetUserTrips, loading, error } = useTripStore();
+    const { trips, actionGetUserTrips, loading, error, actionUpdateTrip } = useTripStore();
 
     // State for storing trip photo URLs
     const [tripPhotos, setTripPhotos] = useState({});
+
+    // State for modal visibility and selected trip details
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTrip, setSelectedTrip] = useState(null);
 
     // useEffect for fetch user trips
     useEffect(() => {
@@ -78,6 +90,66 @@ const UserCardMyTrip = () => {
         return DefaultImage;
     };
 
+    // Fn to open modal
+    const hdlOpenModal = (trip) => {
+        setSelectedTrip(trip);
+        setIsModalOpen(true);
+    };
+
+    // Fn to close modal
+    const hdlCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedTrip(null);
+    };
+
+    // Fn to handle trip updates
+    const hdlUpdateTripAi = async (updatedData) => {
+        console.log("Updated Trip Data:", updatedData);
+
+        const FINAL_PROMPT = AI_PROMPT
+            .replace("{destination}", updatedData.destination)
+            .replace("{totalDays}", updatedData.days)
+            .replace("{traveler}", updatedData.travelers)
+            .replace("{budget}", updatedData.budget);
+
+        try {
+            const chatSession = await createChatSession();
+            const result = await chatSession.sendMessage(FINAL_PROMPT);
+            const jsonResponse = JSON.parse(result?.response?.text());
+            console.log("JSON Response from AI:", jsonResponse);
+
+            // Prepare data to update in the database
+            const updatedTripData = {
+                destination: updatedData.destination,
+                travelers: updatedData.travelers,
+                budget: updatedData.budget,
+                days: updatedData.days,
+                jsonResponse, // Include AI response for hotels and itinerary
+            };
+
+            // Update the trip data in the store
+            await actionUpdateTrip({
+                ...updatedTripData,
+                id: selectedTrip.id,
+                jsonResponse, // Include AI response if needed
+            });
+
+            // // Manually update the trips state to reflect the updated trip
+            // useTripStore.getState().trips = useTripStore.getState().trips.map(trip =>
+            //     trip.id === selectedTrip.id ? updatedTrip : trip
+            // );
+
+            await actionGetUserTrips();
+            toast.success("Trip updated successfully!");
+
+        } catch (error) {
+            console.error("Error generating trip:", error);
+            toast.error("Error updating trip. Please try again.");
+        }
+
+        hdlCloseModal(); // Close modal after update
+    };
+
     // Return loading or error state if applicable
     if (loading) return <p>Loading trips...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -85,47 +157,54 @@ const UserCardMyTrip = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
             {!Array.isArray(tripPhotos) || tripPhotos.length === 0 ? (
-                <p>No trips available.</p> 
+                <p>No trips available.</p>
             ) : (
                 tripPhotos.map((trip) => (
-                        <div
-                            className="card card-compact bg-base-100 w-full shadow-xl"
-                            key={trip.id}
-                        >
-                            <figure>
-                                <img
-                                    src={trip.photoUrl}
-                                    alt={trip.destination}
-                                    className="h-[200px] w-full object-cover"
+                    <div
+                        className="card card-compact bg-base-100 w-[333.34px] shadow-xl"
+                        key={trip.id}
+                    >
+                        <figure>
+                            <img
+                                src={trip.photoUrl}
+                                alt={trip.destination}
+                                className="h-[200px] w-full object-cover"
+                            />
+                        </figure>
+                        <div className="card-body flex flex-col">
+                            <div className="card-actions">
+                                <div>
+                                    <h2 className="card-title text2xl">{trip.destination}</h2>
+                                    <p>
+                                        {trip.days} day trip on {trip.budget} Budget for{" "}
+                                        {trip.travelers}
+                                    </p>
+                                </div>
+                                <MenuMainTrip
+                                    tripId={trip.id}
+                                    onEdit={() => hdlOpenModal(trip)}
+                                    onClose={() => { }}
                                 />
-                            </figure>
-                            <div className="card-body flex flex-col">
-                                <div className="card-actions">
-                                    <div>
-                                        <h2 className="card-title text2xl">{trip.destination}</h2>
-                                        <p>
-                                            {trip.days} day trip on {trip.budget} Budget for{" "}
-                                            {trip.travelers}
-                                        </p>
-                                    </div>
-                                    <MenuMainTrip
-                                        tripId={trip.id}
-                                        onEdit={() => console.log("Edit Plan")}
-                                        onClose={() => { }}
-                                    />
-                                </div>
-                                <div className="card-actions justify-end items-end">
-                                    <Link
-                                        to={`/view-trip/${trip.id}`}
-                                        className="btn rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
-                                    >
-                                        See Your Plan
-                                    </Link>
-                                </div>
+                            </div>
+                            <div className="card-actions justify-end items-end">
+                                <Link
+                                    to={`/view-trip/${trip.id}`}
+                                    className="btn rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
+                                >
+                                    See Your Plan
+                                </Link>
                             </div>
                         </div>
-                    )
-                )
+                    </div>
+                ))
+            )}
+            {isModalOpen && selectedTrip && (
+                <UpdateTripModel
+                    isOpen={isModalOpen}
+                    onClose={hdlCloseModal}
+                    tripDetails={selectedTrip}
+                    onUpdate={hdlUpdateTripAi}
+                />
             )}
         </div>
     );

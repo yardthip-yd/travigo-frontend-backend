@@ -17,7 +17,7 @@ import TravelerOpt from "@/components/options/TravelerOpt";
 
 // Import VDO
 import Mainvdo from "@/assets/video/main.mp4"
-import { DropdownIcon } from "@/components/ui/icon";
+import { BudgetIcon, DayIcon, DropdownIcon, PlaceIcon, TravelerIcon } from "@/components/ui/icon";
 
 // Import store
 import useAuthStore from "@/stores/authStore";
@@ -189,8 +189,7 @@ const CreateTrip = () => {
 
                             {/* Destination */}
                             <div className="flex flex-row items-center gap-1">
-                                <p>icon</p>
-
+                                <PlaceIcon className="w-8 h-8"/>
                                 {apiKey ? (
                                     <GooglePlacesAutocomplete
                                         apiKey={apiKey} // Use the fetched API Key
@@ -245,7 +244,7 @@ const CreateTrip = () => {
 
                             {/* Travel Days */}
                             <div className="flex flex-row items-center gap-1">
-                                <p>icon</p>
+                                <DayIcon className="w-8 h-8" />
                                 <input
                                     type="number"
                                     placeholder="How many days..."
@@ -260,7 +259,7 @@ const CreateTrip = () => {
 
                             {/* Budget */}
                             <div className="flex flex-row items-center gap-1">
-                                <p>icon</p>
+                                <BudgetIcon className="w-8 h-8"/>
                                 <select
                                     className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full text-slate-900"
                                     value={selectedBudget} // Set selected budget
@@ -285,7 +284,7 @@ const CreateTrip = () => {
 
                             {/* Traveler */}
                             <div className="flex flex-row items-center gap-1">
-                                <p>icon</p>
+                                <TravelerIcon className="w-8 h-8"/>
                                 <select
                                     className="select select-bordered w-80 text-base bg-slate-50 border-slate-200 rounded-full select-custom text-slate-900"
                                     value={selectedTraveler}

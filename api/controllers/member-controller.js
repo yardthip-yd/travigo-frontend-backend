@@ -22,7 +22,7 @@ memberController.listMember = tryCatch(async (req, res) => {
             firstName: true,
             lastName: true,
             email: true,
-            password: true,
+            // password: true,
             role: true,
             profileImage: true,
             createdAt: true,
@@ -61,20 +61,20 @@ memberController.updateMember = tryCatch(async (req, res) => {
 
     // 2. Prepare data for update
     const updatedData = {
-        firstName,
-        lastName,
-        email,
+        // firstName,
+        // lastName,
+        // email,
         role,
     };
 
-    // 3. Check if a new password is provided
-    if (password && password.trim() !== "") {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        updatedData.password = hashedPassword;
-    } else {
-        console.log("Retaining existing password");
-        delete updatedData.password;
-    }
+    // // 3. Check if a new password is provided
+    // if (password && password.trim() !== "") {
+    //     const hashedPassword = await bcrypt.hash(password, 10);
+    //     updatedData.password = hashedPassword;
+    // } else {
+    //     console.log("Retaining existing password");
+    //     delete updatedData.password;
+    // }
 
     console.log("Updating member with data from member-cont:", updatedData);
 

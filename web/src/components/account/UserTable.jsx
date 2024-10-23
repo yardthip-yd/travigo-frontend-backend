@@ -73,14 +73,10 @@ const UserTable = () => {
 
         // Prepare updated data
         const updatedData = {};
-        updatedData.firstName = firstName;
-        updatedData.lastName = lastName;
-        updatedData.email = email;
+        // updatedData.firstName = firstName;
+        // updatedData.lastName = lastName;
+        // updatedData.email = email;
         updatedData.role = role;
-
-        if (password && password.trim() !== "") {
-            updatedData.password = password;
-        }
 
         // Log the updated data before sending
         console.log("Updating member data from userTable:", updatedData);
@@ -126,7 +122,6 @@ const UserTable = () => {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Password</th>
                             <th>Role</th>
                             <th>Actions</th>
                         </tr>
@@ -140,7 +135,6 @@ const UserTable = () => {
                                 <td>{member.firstName}</td>
                                 <td>{member.lastName}</td>
                                 <td>{member.email}</td>
-                                <td>{member.password ? "******" : ""}</td>
                                 <td>{member.role}</td>
                                 <td>
                                     <button className="btn btn-ghost btn-xs" onClick={() => hdlEditClick(member)}>Edit</button>
@@ -173,7 +167,7 @@ const UserTable = () => {
                     <div className="modal-box">
                         <h2 className="font-bold text-xl">Edit Member</h2>
                         <form onSubmit={hdlUpdate}>
-                            <div className="form-control flex flex-col gap-2">
+                            {/* <div className="form-control flex flex-col gap-2">
                                 <Avatar
                                     imgSrc={selectedMember.profileImage}
                                     className="mask mask-squircle h-16 w-16"
@@ -220,21 +214,7 @@ const UserTable = () => {
                                     } // Update email
                                     className="input input-bordered"
                                 />
-                            </div>
-                            <div className="form-control">
-                                <label className="label font-semibold">Password</label>
-                                <input
-                                    type="password"
-                                    placeholder="********"
-                                    onChange={(e) =>
-                                        setSelectedMember({
-                                            ...selectedMember,
-                                            password: e.target.value,
-                                        })
-                                    } // Update password
-                                    className="input input-bordered"
-                                />
-                            </div>
+                            </div> */}
                             <div className="form-control">
                                 <label className="label font-semibold">Role</label>
                                 <select

@@ -89,4 +89,41 @@ tripController.deleteTrip = tryCatch(async (req, res) => {
     res.status(200).json({ message: "Trip deleted successfully", deletedTrip });
 });
 
+tripController.updateTrip = tryCatch(async (req, res) => {
+    const { tripId } = req.params;
+    const tripData = req.body;
+
+    // Log the trip ID and incoming data
+    console.log("Updating trip with ID:", tripId);
+    console.log("Received trip data:", tripData);
+
+    if (!tripId) {
+        return createError(400, "Trip ID is required");
+    }
+
+    try {
+        // Perform the update operation using Prisma
+        const updatedTrip = await prisma.trip.update({
+            where: {
+                id: parseInt(tripId, 10),
+            },
+            data: {
+                destination: tripData.destination,
+                travelers: tripData.travelers, 
+                budget: tripData.budget,
+                days: tripData.days,
+            },
+        });
+
+        // Log successful update
+        console.log("Trip updated successfully:", updatedTrip);
+        res.json({ message: "Trip updated successfully", updatedTrip });
+
+    } catch (error) {
+        // Log the error if the update fails
+        console.error("Error updating trip:", error);
+        return createError(500, "Error updating trip. Please try again.");
+    }
+});
+
 module.exports = tripController;

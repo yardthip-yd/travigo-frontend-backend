@@ -73,19 +73,47 @@ const useTripStore = create((set) => ({
                 },
                 data: { tripId }
             });
-    
 
-        set((state) => ({
-            trips: state.trips.filter(trip => trip.id !== tripId), 
-        }));
 
-        console.log("Delete trip in Zustand", response.data);
-        
+            set((state) => ({
+                trips: state.trips.filter(trip => trip.id !== tripId),
+            }));
+
+            console.log("Delete trip in Zustand", response.data);
+
         } catch (error) {
             console.error('Error deleting trip:', error);
             throw error;
         }
     },
+    actionUpdateTrip: async (tripData) => {
+        try {
+            const token = useAuthStore.getState().token;
+
+            // Make sure to include tripId in the tripData
+            const response = await axios.put(`http://localhost:9900/trip/update-trip/${tripData.id}`, tripData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log("Updating trip with data:", tripData);
+
+            // Update the trips state to reflect the updated trip
+            set((state) => ({
+                trips: state.trips.map((trip) =>
+                    trip.id === response.data.updatedTrip.id ? response.data.updatedTrip : trip
+                ),
+            }));
+
+            console.log("Update trip in Zustand", response.data);
+            return response.data; // Return updated trip data
+        } catch (error) {
+            console.error('Error updating trip:', error);
+            throw error;
+        }
+    }
 }));
 
 export default useTripStore;
