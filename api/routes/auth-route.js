@@ -17,4 +17,9 @@ authRoute.post("/login", loginValidator, authController.login)
 authRoute.get("/getme", authenticate ,authController.currentUser)
 authRoute.patch("/updateme", authenticate, uploadAvatar.single("profileImage"), authController.updateUser)
 
+// For password reset
+authRoute.post("/send-reset-link", authController.sendResetLink);
+authRoute.get("/reset-password/:token", authController.getResetPasswordPage);
+authRoute.post("/reset-password/:token", authController.resetPassword);
+
 module.exports = authRoute

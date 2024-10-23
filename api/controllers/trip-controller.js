@@ -66,7 +66,7 @@ tripController.getUserTrips = tryCatch(async (req, res) => {
     });
 
     if (trips.length === 0) {
-        return createError(404, "No trips found for this user");
+        return createError(200, "No trips found for this user");
     }
 
     res.json({ message: "Get user trips successful", trips });

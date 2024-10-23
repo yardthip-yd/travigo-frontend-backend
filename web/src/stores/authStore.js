@@ -13,7 +13,7 @@ const useAuthStore = create(
                 // get input from outside
 
                 const result = await axios.post(
-                    "http://localhost:9900/auth/register",
+                    "http://localhost:9900/register",
                     input
                 );
                 // console.log("Register in Zustand", result.data.message)
@@ -22,7 +22,7 @@ const useAuthStore = create(
                 // get input from outside
 
                 const result = await axios.post(
-                    "http://localhost:9900/auth/login",
+                    "http://localhost:9900/login",
                     input
                 );
                 // console.log("Login in Zustand", result.data)
@@ -49,7 +49,7 @@ const useAuthStore = create(
                     console.error("No token found. Please log in."); // Log an error if token is not found
                     return; // Return early if token is not available
                 }
-                const response = await axios.get("http://localhost:9900/auth/getme", {
+                const response = await axios.get("http://localhost:9900/getme", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -62,7 +62,7 @@ const useAuthStore = create(
 
                 if (!token) return;
                 const response = await axios.patch(
-                    "http://localhost:9900/auth/updateme",
+                    "http://localhost:9900/updateme",
                     input,
                     {
                         headers: {

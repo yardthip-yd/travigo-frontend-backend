@@ -157,7 +157,7 @@ const UserCardMyTrip = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
             {!Array.isArray(tripPhotos) || tripPhotos.length === 0 ? (
-                <p>No trips available.</p>
+                <p className="text-slate-400">Start planning and enjoy your adventure!</p>
             ) : (
                 tripPhotos.map((trip) => (
                     <div

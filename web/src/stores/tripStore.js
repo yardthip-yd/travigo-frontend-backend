@@ -57,7 +57,7 @@ const useTripStore = create((set) => ({
                 },
             });
 
-            set({ trips: response.data.trips, loading: false });
+            set({ trips: response.data.trips || [], loading: false });
         } catch (error) {
             console.error('Error fetching user trips:', error);
             set({ error: error.message, loading: false });

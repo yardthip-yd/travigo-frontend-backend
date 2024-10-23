@@ -26,7 +26,7 @@ app.use("/api", gplaceRoute)
 app.use("/api", gaiRoute)
 
 // Import Routing
-app.use("/auth", authRoute)
+app.use("/", authRoute)
 app.use("/trip", tripRoute)
 app.use("/member", memberRoute)
 

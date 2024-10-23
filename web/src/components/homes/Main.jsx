@@ -32,8 +32,8 @@ const Main = () => {
                     </div>
 
                     {/* Go to create trip */}
-                    <Link to={"/trip"}className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-40 border-none">
-                        Get Started
+                    <Link to={"/trip"}className="btn bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full w-100 border-none">
+                        Get Started, Create your own trip!
                     </Link>
                 </div>
             </div>

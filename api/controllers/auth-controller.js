@@ -5,6 +5,10 @@ const createError = require("../utils/create-error");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Inport for reset password
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
 // Import Cloudinary
 const cloudinary = require("../config/cloudinary-config");
 const fs = require("fs");
@@ -166,6 +170,104 @@ authController.updateUser = tryCatch(async (req, res) => {
         message: "User updated successfully",
         user: updatedData,
     });
+});
+
+authController.sendResetLink = tryCatch(async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!user) {
+            return createError(404, "Email not found");
+        }
+
+        // Generate a unique token
+        const resetToken = crypto.randomBytes(32).toString("hex");
+
+        // Store the token in the database (or set an expiration time)
+        await prisma.user.update({
+            where: { email },
+            data: { resetToken }, // Consider adding an expiration field as well
+        });
+
+        // Send the email with the reset link
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+            debug: true, 
+        });
+
+        // Create the link to reset password
+        const resetLink = `http://localhost:5173/reset-password/${resetToken}`; 
+        // const resetLink = `http://localhost:9900/reset-password`; 
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Password Reset Link",
+            text: `Click on this link to reset your password: ${resetLink}`,
+        };
+
+        await transporter.sendMail(mailOptions); // Send the email
+
+        res.status(200).json({ message: "Reset link sent to your email!" });
+    } catch (error) {
+        console.error(error);
+        return createError(500, "Server error");
+    }
+});
+
+authController.resetPassword = tryCatch(async (req, res) => {
+    const { token } = req.params; // Get the reset token from the URL
+    const { newPassword } = req.body; // Get the new password from the request body
+
+    console.log("Received token:", token)
+    console.log("Received new password:", newPassword);
+
+    // Find the user by reset token
+    const user = await prisma.user.findFirst({
+        where: { resetToken: token },
+    });
+
+    if (!user) {
+        return createError(404, "Invalid or expired token");
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password and clear the reset token
+    await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            password: hashedPassword,
+            resetToken: null,
+        },
+    });
+
+    res.status(200).json({ message: "Password has been reset successfully!" });
+});
+
+authController.getResetPasswordPage = tryCatch(async (req, res) => {
+    const { token } = req.params;
+
+    // console.log("Received token for validation:", token); 
+    
+    const user = await prisma.user.findFirst({
+        where: { resetToken: token },
+    });
+
+    if (!user) {
+        return createError(404, "Invalid or expired token");
+    }
+
+    res.status(200).json({ message: "Token is valid from auth-cont", token });
 });
 
 module.exports = authController;

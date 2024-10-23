@@ -14,6 +14,7 @@ import ViewTrip from "@/pages/trip/ViewTrip";
 import MyTrip from "@/pages/trip/MyTrip";
 import UserAccount from "@/pages/account/UserAccount";
 import AdminAccount from "@/pages/account/AdminAccount";
+import ResetPassword from "@/pages/auth/ResetPassword";
 
 // Import store
 import useAuthStore from "@/stores/authStore";
@@ -26,6 +27,7 @@ const guestRouter = createBrowserRouter([
             { index: true, element: <Home /> },
             { path: "/login", element: <Login /> },
             { path: "/register", element: <Register /> },
+            { path: "/reset-password/:token", element: <ResetPassword /> },
             { path: "*", element: <Navigate to="/" /> },
         ],
     }
@@ -49,6 +51,8 @@ const userRouter = createBrowserRouter([
 // Export AppRoute
 const AppRoute = () => {
 
+    console.log("AppRoute is rendering");
+    
     // State for use authStore
     const user = useAuthStore((state) => state.user)
 

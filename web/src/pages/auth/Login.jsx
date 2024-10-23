@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom";
 
 // Import store
 import useAuthStore from '@/stores/authStore';
@@ -12,16 +13,25 @@ import Authvdo from "@/assets/video/auth.mp4"
 // Import Icon
 import { EmailIcon, PasswordIcon } from "@/components/ui/icon";
 
+// Import Reset Password
+import ResetPasswordModal from '@/components/auth/ResetPasswordModel';
+
 const Login = () => {
 
     // State from Stores
     const actionLogin = useAuthStore((state) => state.actionLogin)
+
+    // Navigate
+    const navigate = useNavigate();
 
     // useState for input
     const [input, setInput] = useState({
         email: "",
         password: ""
     })
+
+    // State for controlling modal visibility (Reset Password)
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Fn handleChange update input when user fill information
     const hdlChange = (e) => {
@@ -52,6 +62,21 @@ const Login = () => {
         }
     }
 
+    // Fn to open the modal
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Fn to close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    // Fn to handle reset success navigate to login
+    const hdlResetSuccess = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="h-screen w-full flex items-center min-h-[500px]">
             {/* Background */}
@@ -74,8 +99,7 @@ const Login = () => {
                 <div className="w-full flex flex-col text-start gap-2 text-slate-900">
                     <h2 className="text-5xl font-bold">Login</h2>
                     <p className="mb-4">
-                        {" "}
-                        Welcome! Sign in to your account.{" "}
+                        Welcome! Sign in to your account. We are so happy to have you here.
                     </p>
                 </div>
 
@@ -122,7 +146,7 @@ const Login = () => {
                 <div className="flex flex-col items-center gap-4">
                     {/* Forgot password */}
                     <div className="flex gap-1">
-                        <Link to={"/login"} ><p className="text-slate-400">Forgot Password?</p></Link>
+                        <p onClick={openModal} className="text-slate-400 cursor-pointer">Forgot Password?</p>
                     </div>
                     {/* Go to login */}
                     <div className="flex gap-1">
@@ -131,6 +155,8 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            {/* Reset Password Modal */}
+            <ResetPasswordModal isOpen={isModalOpen} onClose={closeModal} onResetSuccess={hdlResetSuccess} />
         </div>
     )
 }
