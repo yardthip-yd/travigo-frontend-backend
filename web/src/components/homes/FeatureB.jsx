@@ -4,7 +4,7 @@ import FeatureBImage from "@/assets/image/FeatureB.jpg";
 
 const FeatureB = () => {
     return (
-        <div className="max-h-[600px] w-full flex justify-start items-center bg-slate-50 px-[200px] py-10">
+        <div className="max-h-[600px] max-w-[2000px] flex justify-start items-center bg-slate-50 px-[200px] py-10">
             {/* Group B */}
             <div className="hero-content text-neutral-content lg:w-3/4 pl-[100px]">
                 <div className="w-full flex justify-center flex-col gap-8">

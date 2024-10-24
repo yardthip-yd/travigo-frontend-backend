@@ -17,7 +17,7 @@ const path = require("path");
 const authController = {};
 
 authController.register = tryCatch(async (req, res) => {
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
+    const { firstName, lastName, email, password, confirmPassword } = req.input;
 
     // 1. Validation by joi in validation.js
     // 2. Check in database that Email already exist

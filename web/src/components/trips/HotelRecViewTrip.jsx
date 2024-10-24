@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DefaultImage from "@/assets/image/pixabay.gif";
+import useTripStore from "@/stores/tripStore";
 
 // Import GPlace
 import { googlePlaceKey } from "@/services/GPlaceService";
@@ -11,8 +12,11 @@ import { GetPlaceDetails, PHOTO_REF_URL } from "@/services/GMPlaceService";
 
 // Import Icon
 import { MapIcon } from "@/components/ui/icon";
+import MenuHotel from "@/components/trips/MenuHotel";
 
 const HotelRecViewTrip = ({ trip, hotels }) => {
+
+    const { trips, actionGetUserTrips } = useTripStore();
 
     // State for photo URL
     const [hotelPhotos, setHotelPhotos] = useState({});
@@ -35,6 +39,14 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
         };
         fetchHotelPhotos();
     }, [trip]);
+
+    useEffect(() => {
+        const fetchTrips = async () => {
+            await actionGetUserTrips();
+        };
+
+        fetchTrips();
+    }, [actionGetUserTrips]);
 
     // Fn for get hotel photo 
     const GetHotelPhotos = async (hotel) => {
@@ -66,65 +78,66 @@ const HotelRecViewTrip = ({ trip, hotels }) => {
             <h2 className="font-bold text-xl">Hotel Recommendations</h2>
             <div className="flex space-x-8 overflow-auto py-4">
                 {hotels.map((hotel) => (
-                    <Link
-                        key={hotel.id}
-                        to={`https://www.google.com/maps/search/?api=1&query=${hotel.hotelName}`}
-                        target="_blank"
-                    >
-                        <div className="card card-compact bg-base-100 shadow-xl w-80 flex-shrink-0 hover:scale-105 transition-all">
-                            <figure>
-                                <img src={hotelPhotos[hotel.id] || DefaultImage} className="h-[200px] w-full object-cover" />
-                            </figure>
-                            <div className="card-body  min-h-[190px]">
+                    <div key={hotel.id} className="card card-compact bg-base-100 shadow-xl w-80 flex-shrink-0 hover:scale-105 transition-all">
+                        <Link
+                            key={hotel.id}
+                            to={`https://www.google.com/maps/search/?api=1&query=${hotel.hotelName}`}
+                            target="_blank"
+                        >
+                            <img src={hotelPhotos[hotel.id] || DefaultImage} className="h-[200px] w-full object-cover rounded-xl" />
+                        </Link>
+                        <div className="card-body  min-h-[190px]">
+                            <div className="flex items-center justify-between">
                                 <h2 className="text-base font-semibold">{hotel.hotelName}</h2>
-                                <p>Address: {hotel.hotelAddress}</p>
-                                <p>Price: THB {hotel.hotelPrice} per day</p>
-                                <div className="flex justify-between">
-                                    {/* Star */}
-                                    <div className="items-center flex gap-2">
-                                        <div className="rating rating-sm rating-half">
-                                            {Array.from({ length: 5 }, (_, index) => {
-                                                const fullStar = index + 1;
-                                                const halfStar = index + 0.5;
-                                                return (
-                                                    <React.Fragment key={index}>
-                                                        <input
-                                                            type="radio"
-                                                            name={`rating-${hotel.id}`}
-                                                            className="mask mask-star-2 mask-half-1 bg-blue-500"
-                                                            defaultChecked={
-                                                                hotel.hotelRating === halfStar ||
-                                                                hotel.hotelRating === fullStar
-                                                            }
-                                                            disabled
-                                                        />
-                                                        <input
-                                                            type="radio"
-                                                            name={`rating-${hotel.id}`}
-                                                            className="mask mask-star-2 mask-half-2 bg-blue-500"
-                                                            defaultChecked={
-                                                                hotel.hotelRating === fullStar
-                                                            }
-                                                            disabled
-                                                        />
-                                                    </React.Fragment>
-                                                );
-                                            })}
-                                        </div>
-                                        <p>{hotel.hotelRating} Stars</p>
+                                <MenuHotel tripId={trip.id} hotelId={hotel.id} onClose={() => { }} />
+                            </div>
+                            <p>Address: {hotel.hotelAddress}</p>
+                            <p>Price: THB {hotel.hotelPrice} per day</p>
+                            <div className="flex justify-between">
+                                {/* Star */}
+                                <div className="items-center flex gap-2">
+                                    <div className="rating rating-sm rating-half">
+                                        {Array.from({ length: 5 }, (_, index) => {
+                                            const fullStar = index + 1;
+                                            const halfStar = index + 0.5;
+                                            return (
+                                                <React.Fragment key={index}>
+                                                    <input
+                                                        type="radio"
+                                                        name={`rating-${hotel.id}`}
+                                                        className="mask mask-star-2 mask-half-1 bg-blue-500"
+                                                        defaultChecked={
+                                                            hotel.hotelRating === halfStar ||
+                                                            hotel.hotelRating === fullStar
+                                                        }
+                                                        disabled
+                                                    />
+                                                    <input
+                                                        type="radio"
+                                                        name={`rating-${hotel.id}`}
+                                                        className="mask mask-star-2 mask-half-2 bg-blue-500"
+                                                        defaultChecked={
+                                                            hotel.hotelRating === fullStar
+                                                        }
+                                                        disabled
+                                                    />
+                                                </React.Fragment>
+                                            );
+                                        })}
                                     </div>
-                                    {/* Map */}
-                                    <Link
-                                        key={hotel.id}
-                                        to={`https://www.google.com/maps/search/?api=1&query=${hotel.hotelName}`}
-                                        target="_blank"
-                                    >
-                                        <MapIcon className="h-10 w-10" />
-                                    </Link>
+                                    <p>{hotel.hotelRating} Stars</p>
                                 </div>
+                                {/* Map */}
+                                <Link
+                                    key={hotel.id}
+                                    to={`https://www.google.com/maps/search/?api=1&query=${hotel.hotelName}`}
+                                    target="_blank"
+                                >
+                                    <MapIcon className="h-10 w-10" />
+                                </Link>
                             </div>
                         </div>
-                    </Link>
+                    </div>
                 ))}
             </div>
         </div>

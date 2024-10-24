@@ -29,7 +29,7 @@ const UpdateTripModel = ({ isOpen, onClose, tripDetails, onUpdate }) => {
 
 
     return (
-        <div className="modal modal-open">
+        <div className="modal modal-open items-start">
             <div className="modal-box">
                 <h2 className="font-bold text-xl mb-4">Update Trip Details</h2>
                 <div className="form-control">

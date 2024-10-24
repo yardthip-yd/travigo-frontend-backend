@@ -9,8 +9,10 @@ const Home = () => {
     return (
         <div className='overflow-auto relative'>
             <Main />
+            <div className='flex flex-col items-center bg-slate-50'>
             <FeatureA />
             <FeatureB />
+            </div>
         </div>
     )
 }

@@ -23,7 +23,7 @@ const authenticate = tryCatch(async(req, res, next) => {
     console.log("Payload from authen", payload)
 
     const foundUser = await prisma.user.findUnique({ where: { id: payload.id } })
-    console.log("Found User:", foundUser);
+    // console.log("Found User:", foundUser);
     if (!foundUser) {
         return createError(401, 'Unauthorized')
     }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import DefaultImage from "@/assets/image/pixabay.gif";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 // Import component for update and delete
 import MenuMainTrip from "@/components/trips/MenuMainTrip";
@@ -107,16 +108,29 @@ const UserCardMyTrip = () => {
         console.log("Updated Trip Data:", updatedData);
 
         const FINAL_PROMPT = AI_PROMPT
-            .replace("{destination}", updatedData.destination)
+            .replace("{destination}", updatedData.destination.trim())
             .replace("{totalDays}", updatedData.days)
-            .replace("{traveler}", updatedData.travelers)
-            .replace("{budget}", updatedData.budget);
+            .replace("{traveler}", updatedData.travelers.trim())
+            .replace("{budget}", updatedData.budget.trim());
 
         try {
             const chatSession = await createChatSession();
             const result = await chatSession.sendMessage(FINAL_PROMPT);
-            const jsonResponse = JSON.parse(result?.response?.text());
-            console.log("JSON Response from AI:", jsonResponse);
+            console.log("Raw response from AI:", result.response.text);
+
+            let jsonResponse;
+
+            try {
+                jsonResponse = JSON.parse(result?.response?.text());
+            } catch (parseError) {
+                console.error("JSON parsing error:", parseError);
+                console.error("Response text that caused the error:", result.response.text);
+                toast.error("Error parsing AI response. Please try again.");
+                return;
+            }
+
+            console.log("JSON Response from AI from Card Trip", jsonResponse);
+
 
             // Prepare data to update in the database
             const updatedTripData = {
@@ -124,20 +138,20 @@ const UserCardMyTrip = () => {
                 travelers: updatedData.travelers,
                 budget: updatedData.budget,
                 days: updatedData.days,
-                jsonResponse, // Include AI response for hotels and itinerary
+                hotels: jsonResponse.HotelOptions,
+                itinerary: jsonResponse.Itinerary,
+                // jsonResponse, // Include AI response for hotels and itinerary
             };
 
             // Update the trip data in the store
             await actionUpdateTrip({
                 ...updatedTripData,
                 id: selectedTrip.id,
-                jsonResponse, // Include AI response if needed
+                // jsonResponse, // Include AI response if needed
             });
 
-            // // Manually update the trips state to reflect the updated trip
-            // useTripStore.getState().trips = useTripStore.getState().trips.map(trip =>
-            //     trip.id === selectedTrip.id ? updatedTrip : trip
-            // );
+            // Call the fn for update hotels and itinerary
+            await updateHotelsAndItineraryToDatabase(selectedTrip.id, jsonResponse);
 
             await actionGetUserTrips();
             toast.success("Trip updated successfully!");
@@ -149,6 +163,54 @@ const UserCardMyTrip = () => {
 
         hdlCloseModal(); // Close modal after update
     };
+
+    // Fn for update hotels and itinerary in the database
+    const updateHotelsAndItineraryToDatabase = async (tripId, jsonResponse) => {
+        try {
+            // Check if hotelOptions and itinerary are defined
+            if (!jsonResponse.hotelOptions || !Array.isArray(jsonResponse.hotelOptions) || jsonResponse.hotelOptions.length === 0) {
+                toast.error("No hotel options available in the response.");
+                return;
+            }
+
+            if (!jsonResponse.itinerary || !Array.isArray(jsonResponse.itinerary)) {
+                throw new Error("No itinerary available in the response.");
+            }
+
+            const hotels = jsonResponse.hotelOptions.map(hotel => ({
+                hotelName: hotel.HotelName,
+                hotelAddress: hotel.HotelAddress,
+                hotelPrice: parseFloat(hotel.HotelPrice) || 0,
+                hotelRating: parseFloat(hotel.HotelRating) || 0,
+                hotelDescription: hotel.HotelDescription,
+            }));
+
+            const itinerary = jsonResponse.itinerary.flatMap(day => 
+                day.Places.map(plan => ({
+                    day: day.Day,
+                    placeName: plan.PlaceName,
+                    placeDescription: plan.PlaceDetails,
+                    ticketPrice: parseFloat(plan.TicketPricing) || 0,
+                    latitude: parseFloat(plan.PlaceGeoCoordinates.latitude),
+                    longitude: parseFloat(plan.PlaceGeoCoordinates.longitude),
+                    startTime: plan.StartTime,
+                    endTime: plan.EndTime,
+                }))
+            );
+
+            // Call API to update hotels and itinerary
+            const response = await axios.put(`http://localhost:9900/trip/update-hotels-itinerary/${tripId}`, { hotels, itinerary });
+            if (response.status !== 200) {
+                throw new Error("Failed to update hotels and itinerary");
+            }
+
+            console.log("Hotels and itinerary updated successfully.");
+        } catch (error) {
+            console.error("Error updating hotels and itinerary:", error);
+            toast.error("Error updating hotels and itinerary. Please try again.");
+        }
+    };
+
 
     // Return loading or error state if applicable
     if (loading) return <p>Loading trips...</p>;
@@ -171,10 +233,10 @@ const UserCardMyTrip = () => {
                                 className="h-[200px] w-full object-cover"
                             />
                         </figure>
-                        <div className="card-body flex flex-col">
+                        <div className="card-body flex flex-col justify-between">
                             <div className="card-actions">
                                 <div>
-                                    <h2 className="card-title text2xl">{trip.destination}</h2>
+                                    <h2 className="card-title text2xl w-[255px]">{trip.destination}</h2>
                                     <p>
                                         {trip.days} day trip on {trip.budget} Budget for{" "}
                                         {trip.travelers}
@@ -204,6 +266,7 @@ const UserCardMyTrip = () => {
                     onClose={hdlCloseModal}
                     tripDetails={selectedTrip}
                     onUpdate={hdlUpdateTripAi}
+                    actionGetUserTrips={actionGetUserTrips}
                 />
             )}
         </div>

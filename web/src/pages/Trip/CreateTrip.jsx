@@ -118,12 +118,16 @@ const CreateTrip = () => {
             const result = await chatSession.sendMessage(FINAL_PROMPT);
             // console.log(result?.response?.text());
 
+            if (!result?.response?.text()) {
+                throw new Error("Invalid response from AI");
+            }        
+
             // Log to see trip data
             const jsonResponse = JSON.parse(result?.response?.text());
             // console.log(JSON.stringify(jsonResponse, null, 2));
 
             // Log AI response
-            console.log("JSON Response from AI:", jsonResponse);
+            console.log("JSON Response from AI form Create Trip", jsonResponse);
 
             // Save trip data to the database
             await saveTripToDatabase(jsonResponse);

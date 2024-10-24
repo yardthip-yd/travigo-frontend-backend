@@ -1,6 +1,11 @@
 // Import
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import DefaultImage from "@/assets/image/pixabay.gif";
+
+// Import Icon
+import { MapIcon, EditIcon, DotIcon } from "@/components/ui/icon";
+import MenuPlace from "@/components/trips/MenuPlace";
 
 // Import GPlace
 import { googlePlaceKey } from "@/services/GPlaceService";
@@ -16,9 +21,14 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
     useEffect(() => {
         const fetchItineraryPhotos = async () => {
             if (trip && itineraries) {
-                const itinerariesWithPhotos = await Promise.all(itineraries.map(async (itinerary) => {
+                // Sort itineraries by startTime
+                const sortedItineraries = itineraries.sort((a, b) => {
+                    return a.startTime.localeCompare(b.startTime);
+                });
+
+                const itinerariesWithPhotos = await Promise.all(sortedItineraries.map(async (itinerary) => {
                     const photoUrl = await GetItineraryPhotos(itinerary);
-                    return { ...itinerary, photoUrl }; 
+                    return { ...itinerary, photoUrl };
                 }));
 
                 // Set the itinerary photos in state
@@ -73,16 +83,37 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
                         {group.places.map((itinerary) => (
                             <div key={itinerary.id} className="flex items-start mb-4 rounded-2xl shadow-xl">
                                 <div className="flex-grow flex gap-2">
-                                    <img
-                                        src={itineraryPhotos[itinerary.id] || DefaultImage}
-                                        alt={itinerary.placeName}
-                                        className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
-                                    />
-                                    <div className="px-8 m-auto flex flex-col gap-2">
-                                        <p className="text-blue-500 font-semibold">{itinerary.startTime} - {itinerary.endTime}</p>
+                                    <Link
+                                        key={itinerary.id}
+                                        to={`https://www.google.com/maps/search/?api=1&query=${itinerary.placeName}`}
+                                        target="_blank"
+                                    >
+                                        <img
+                                            src={itineraryPhotos[itinerary.id] || DefaultImage}
+                                            alt={itinerary.placeName}
+                                            className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
+                                        />
+                                    </Link>
+                                    <div className="px-8 m-auto flex flex-col gap-2 min-w-[736px]">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-blue-500 font-semibold">{itinerary.startTime} - {itinerary.endTime}</p>
+                                            <div className="flex gap-4">
+                                                <MenuPlace tripId={trip.id} placeId={itinerary.id} tripDetails={itinerary} onClose={() => { }} />
+                                            </div>
+                                        </div>
                                         <h3 className="font-bold">{itinerary.placeName}</h3>
                                         <p>{itinerary.placeDescription}</p>
-                                        <p>Ticket Price: THB {itinerary.ticketPrice}</p>
+                                        <div className="flex items-center justify-between">
+                                            <p>Ticket Price: THB {itinerary.ticketPrice}</p>
+                                            {/* Map */}
+                                            <Link
+                                                key={itinerary.id}
+                                                to={`https://www.google.com/maps/search/?api=1&query=${itinerary.placeName}`}
+                                                target="_blank"
+                                            >
+                                                <MapIcon className="h-10 w-10" />
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +121,7 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
                     </div>
                 ))}
             </div>
-        </div>
+        </div >
     )
 }
 

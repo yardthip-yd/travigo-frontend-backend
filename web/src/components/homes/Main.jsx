@@ -4,7 +4,7 @@ import Mainvdo from "@/assets/video/main.mp4"
 
 const Main = () => {
     return (
-        <div className='h-screen w-full flex justify-start items-center min-h-[500px]'>
+        <div className='h-screen w-full flex justify-start items-center min-h-[500px] max-h-[750px]'>
             {/* Background */}
             <div>
                 <video
@@ -20,7 +20,7 @@ const Main = () => {
                 <div className="absolute h-screen inset-0 bg-black opacity-40 z-[-1]"></div>
             </div>
 
-            <div className="hero-content text-neutral-content lg:w-3/4">
+            <div className="hero-content text-neutral-content lg:w-3/4 max-w-[2000px]">
                 <div className="max-w-md text-start">
 
                     {/* Intro */}

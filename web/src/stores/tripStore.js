@@ -28,6 +28,7 @@ const useTripStore = create((set) => ({
 
         } catch (error) {
             console.error('Error creating trip:', error);
+            set({ error: error.message });
             throw error;
         }
     },
@@ -113,7 +114,81 @@ const useTripStore = create((set) => ({
             console.error('Error updating trip:', error);
             throw error;
         }
-    }
+    },
+    actionDeleteHotel: async (tripId, hotelId) => {
+        try {
+            const token = useAuthStore.getState().token;
+            const response = await axios.delete(`http://localhost:9900/trip/view-trip/${tripId}/hotels/${hotelId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            set((state) => ({
+                trips: state.trips.map(trip =>
+                    trip.id === tripId
+                        ? { ...trip, Hotel: trip.Hotel.filter(hotel => hotel.id !== hotelId) }
+                        : trip
+                ),
+            }));
+
+            console.log("Delete hotel in Zustand", response.data);
+
+        } catch (error) {
+            console.error("Error deleting hotel:", error);
+            throw error;
+        }
+    },
+    actionDeletePlace: async (tripId, placeId) => {
+        try {
+            const token = useAuthStore.getState().token;
+            const response = await axios.delete(`http://localhost:9900/trip/view-trip/${tripId}/places/${placeId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log("Place deleted from state", response.data);
+        } catch (error) {
+            console.error('Error deleting place:', error);
+            throw error;
+        }
+    },
+    actionUpdateItineraryTime: async (tripId, placeId, timeData) => {
+        try {
+            const token = useAuthStore.getState().token;
+            const response = await axios.put(`http://localhost:9900/trip/view-trip/${tripId}/places/${placeId}`, timeData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            set((state) => ({
+                trips: state.trips.map((trip) =>
+                    trip.id === tripId
+                        ? {
+                            ...trip,
+                            Itinerary: trip.Itinerary.map((itinerary) =>
+                                itinerary.id === placeId
+                                    ? { ...itinerary, startTime: timeData.startTime, endTime: timeData.endTime }
+                                    : itinerary
+                            ),
+                        }
+                        : trip
+                ),
+            }));
+
+            console.log("Update itinerary time in Zustand", response.data);
+
+        } catch (error) {
+            console.error('Error updating itinerary time:', error);
+            throw error;
+        }
+    },
+
 }));
 
 export default useTripStore;

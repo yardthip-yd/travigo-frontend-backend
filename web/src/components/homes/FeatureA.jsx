@@ -4,7 +4,7 @@ import FeatureAImage from "@/assets/image/FeatureA.jpg";
 
 const FeatureA = () => {
     return (
-        <div className="max-h-[600px] w-full flex justify-start items-center bg-slate-50 px-[200px]">
+        <div className="max-h-[600px] max-w-[2000px] flex justify-start items-center bg-slate-50 px-[200px]">
             {/* Group A */}
             <div className="hero-content text-neutral-content lg:w-3/4 pt-20">
                 {/* Picture Step 1 */}

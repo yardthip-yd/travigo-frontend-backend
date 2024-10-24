@@ -5,7 +5,7 @@ const prisma = require("../config/prisma-config");
 const saveTripData = async (tripData) => {
 
     // Log received trip data to check its structure
-    console.log("Received trip data:", tripData);
+    console.log("Received trip data from trip service", tripData);
 
     // Ensure the budget and travelers are valid strings
     const validBudgets = ["Economy", "Normal", "Luxury"];
@@ -27,19 +27,18 @@ const saveTripData = async (tripData) => {
     });
 
     // Save hotels in the database
-    if (tripData.jsonResponse?.hotelOptions && tripData.jsonResponse.hotelOptions.length > 0) {
-        for (const hotel of tripData.jsonResponse.hotelOptions) {
+    if (tripData.jsonResponse?.HotelOptions && tripData.jsonResponse.HotelOptions.length > 0) {
+        for (const hotel of tripData.jsonResponse.HotelOptions) {
             await prisma.hotel.create({
                 data: {
                     tripId: trip.id,
                     hotelName: hotel.HotelName,
                     hotelAddress: hotel.HotelAddress,
                     hotelPrice: parseFloat(hotel.HotelPrice),
-                    hotelImageUrl: hotel.HotelImageURL,
-                    hotelRating: hotel.HotelRating,
+                    hotelRating: parseFloat(hotel.HotelRating),
                     hotelDescription: hotel.HotelDescription,
                     latitude: parseFloat(hotel.HotelGeoCoordinates.latitude),
-                    longtitude: parseFloat(hotel.HotelGeoCoordinates.longitude),
+                    longitude: parseFloat(hotel.HotelGeoCoordinates.longitude),
                 },
             });
         }
@@ -48,26 +47,24 @@ const saveTripData = async (tripData) => {
     }
 
     // Save itinerary in the database
-    if (tripData.jsonResponse?.itinerary && tripData.jsonResponse.itinerary.length > 0) {
-        for (const day of tripData.jsonResponse.itinerary) {
-            for (const plan of day.DayPlan) {
+    if (tripData.jsonResponse?.Itinerary && tripData.jsonResponse.Itinerary.length > 0) {
+        for (const day of tripData.jsonResponse.Itinerary) {
+            for (const plan of day.Places) {
                 await prisma.itinerary.create({
                     data: {
                         tripId: trip.id,
-                        day: day.Day, // Day of the itinerary
+                        day: parseInt(day.Day, 10), // Day of the itinerary
                         placeName: plan.PlaceName,
                         placeDescription: plan.PlaceDetails,
-                        placeImageUrl: plan.PlaceImageURL,
                         ticketPrice: parseFloat(plan.TicketPricing) || 0,
                         latitude: parseFloat(plan.PlaceGeoCoordinates.latitude),
-                        longtitude: parseFloat(plan.PlaceGeoCoordinates.longitude), 
-                        startTime: plan.StartTime,
-                        endTime: plan.EndTime,
+                        longitude: parseFloat(plan.PlaceGeoCoordinates.longitude), 
+                        startTime: plan.StartTime || null,
+                        endTime: plan.EndTime || null,
                     },
                 });
             }
         }
-
         // console.log("Trip Data for Itinerary:", tripData.jsonResponse.itinerary);
     } else {
         console.warn("No itinerary data available in the response");

@@ -26,11 +26,11 @@ const MyTrip = () => {
       <div className="w-full flex-grow my-[30px] flex flex-col items-start">
         <div className="m-auto rounded-xl p-4 flex flex-col gap-4 items-center bg-white bg-opacity-90 relative drop-shadow-2xl shadow-2xl">
           <div className="bg-white rounded-xl shadow-xl w-[1080px] min-h-[550px] p-2">
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row justify-between items-center mb-4">
               <h2 className="font-bold text-xl p-4">My Trips</h2>
               <Link
                 to={`/`}
-                className="btn btn-outline rounded-full text-blue-500"
+                className="btn btn-outline rounded-full text-blue-500 mr-4"
               >
                 + Create Trip
               </Link>
