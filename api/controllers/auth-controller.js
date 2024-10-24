@@ -175,53 +175,48 @@ authController.updateUser = tryCatch(async (req, res) => {
 authController.sendResetLink = tryCatch(async (req, res) => {
     const { email } = req.body;
 
-    try {
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
 
-        if (!user) {
-            return createError(404, "Email not found");
-        }
-
-        // Generate a unique token
-        const resetToken = crypto.randomBytes(32).toString("hex");
-
-        // Store the token in the database (or set an expiration time)
-        await prisma.user.update({
-            where: { email },
-            data: { resetToken }, // Consider adding an expiration field as well
-        });
-
-        // Send the email with the reset link
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-            debug: true, 
-        });
-
-        // Create the link to reset password
-        const resetLink = `http://localhost:5173/reset-password/${resetToken}`; 
-        // const resetLink = `http://localhost:9900/reset-password`; 
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Password Reset Link",
-            text: `Click on this link to reset your password: ${resetLink}`,
-        };
-
-        await transporter.sendMail(mailOptions); // Send the email
-
-        res.status(200).json({ message: "Reset link sent to your email!" });
-    } catch (error) {
-        console.error(error);
-        return createError(500, "Server error");
+    if (!user) {
+        return createError(404, "Email not found");
     }
+
+    // Generate a unique token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Store the token in the database
+    await prisma.user.update({
+        where: { email },
+        data: { resetToken }, // Consider adding an expiration field as well
+    });
+
+    // Send the email with the reset link
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+        debug: true, 
+    });
+
+    // Create the link to reset password
+    const resetLink = `http://localhost:5173/reset-password/${resetToken}`; 
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Password Reset Link",
+        text: `Click on this link to reset your password: ${resetLink}`,
+    };
+
+    await transporter.sendMail(mailOptions); // Send the email
+
+    res.status(200).json({ message: "Reset link sent to your email!" });
 });
+
 
 authController.resetPassword = tryCatch(async (req, res) => {
     const { token } = req.params; // Get the reset token from the URL

@@ -21,6 +21,8 @@ const UserProfile = () => {
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [email, setEmail] = useState(user?.email || "");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState("");
 
@@ -68,6 +70,16 @@ const UserProfile = () => {
     updatedData.append("firstName", firstName);
     updatedData.append("lastName", lastName);
     updatedData.append("email", email);
+
+    // Check if password and confirm password match
+    if (password && password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match!");
+      toast.error("Passwords do not match!");
+      return; // Early return if passwords don't match
+    }
+
+    setConfirmPasswordError("");
+
     if (password) {
       updatedData.append("password", password);
     }
@@ -148,6 +160,21 @@ const UserProfile = () => {
               onChange={(e) => setPassword(e.target.value)} // Update password
             />
           </div>
+          <div className="flex flex-row items-center gap-2">
+            <p className="w-[90px] font-semibold">Confirm Password:</p>
+            <input
+              className="input input-bordered w-80 h-[47.99px] bg-slate-50 border-slate-200 placeholder:text-slate-900"
+              type="password"
+              value={confirmPassword}
+              placeholder="********"
+              onChange={(e) => setConfirmPassword(e.target.value)} // Update confirm password
+            />
+          </div>
+          {confirmPasswordError && (
+            <p className="text-red-500 text-sm mt-1 pl-[90px]">
+              {confirmPasswordError}
+            </p>
+          )}
           <div>
             <div className="flex flex-row items-center gap-2">
               <p className="w-[100px] font-semibold">Avatar:</p>
