@@ -59,6 +59,7 @@ model Hotel {
   trip             Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId           Int    @map("trip_id")
 
+  @@unique([tripId, hotelName]) 
   @@map("hotel")
 }
 
@@ -75,5 +76,6 @@ model Itinerary {
   trip             Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId           Int     @map("trip_id")
 
+  @@unique([tripId, day, placeName])
   @@map("itinerary")
 }

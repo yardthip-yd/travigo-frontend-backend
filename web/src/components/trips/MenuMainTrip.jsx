@@ -9,7 +9,7 @@ import useTripStore from "@/stores/tripStore";
 // Impot Model
 import UpdateTripModal from "@/components/trips/UpdateTripModel"
 
-const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
+const MenuMainTrip = ({ onClose, tripId, existingTrip }) => {
 
     // State for open/close dropdown
     const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,7 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
     const { actionDeleteTrip } = useTripStore();
 
     // State from modal visibility
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     // Navigate
     const navigate = useNavigate();
@@ -46,12 +46,6 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
         }
     };
 
-    // Fn for handle update
-    const hdlUpdate = () => {
-        hdlCloseDropdown();
-        onEdit(tripDetails);
-    };
-
     return (
         <div className="dropdown dropdown-end dropdown-hover"
             onMouseEnter={toggleDropdown}
@@ -67,7 +61,7 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
                     className="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 shadow text-center"
                 >
                     <li>
-                        <a onClick={hdlUpdate}>Update Plan</a>
+                        <a onClick={() => setShowModal(true)}>Update Plan</a>
                     </li>
                     <li>
                         <a onClick={hdlDelete}>Delete Plan</a>
@@ -77,16 +71,14 @@ const MenuMainTrip = ({ onEdit, onClose, tripId, tripDetails }) => {
                     </li>
                 </ul>
             )}
-            {isModalOpen && (
+            {showModal && (
                 <UpdateTripModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    tripDetails={tripDetails}
-                    onUpdate={(updatedData) => {
-                        // Logic to handle the update and generate new trip plan
-                    }}
+                    tripId={tripId}
+                    existingTrip={existingTrip}
+                    onClose={() => setShowModal(false)}
                 />
             )}
+
         </div>
     )
 }

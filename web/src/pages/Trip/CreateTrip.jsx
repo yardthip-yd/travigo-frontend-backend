@@ -26,22 +26,33 @@ import useTripStore from "@/stores/tripStore";
 // Import Login Card
 import LoginCard from "@/components/auth/LoginCard";
 
-const CreateTrip = () => {
+// const CreateTrip = () => { // Old Code
+const CreateTrip = ({ existingTrip = null, isUpdate = false, onClose }) => {
 
+    // // Code for Create Trip
     // useState for store the Gplace Key as API key
     const [apiKey, setApiKey] = useState("");
 
     // useState for store selected Destination/Place
-    const [place, setPlace] = useState();
+    // const [place, setPlace] = useState(); // Old Code
+    const [place, setPlace] = useState(existingTrip ? { label: existingTrip.destination } : null);
 
     // useState for store Form Data
-    const [formData, setFormData] = useState({});
+    // const [formData, setFormData] = useState({}); // Old Code
+    const [formData, setFormData] = useState({
+        destination: existingTrip ? existingTrip.destination : "",
+        numberOfDays: existingTrip ? existingTrip.days : "",
+        budget: existingTrip ? existingTrip.budget : "",
+        traveler: existingTrip ? existingTrip.travelers : "",
+    });
 
     // useState for store selected Budget option
-    const [selectedBudget, setSelectedBudget] = useState("");
+    // const [selectedBudget, setSelectedBudget] = useState(""); // Old Code
+    const [selectedBudget, setSelectedBudget] = useState(existingTrip?.budget || "");
 
     // useState for store selected Traveler option
-    const [selectedTraveler, setSelectedTraveler] = useState("");
+    // const [selectedTraveler, setSelectedTraveler] = useState(""); // Old Code
+    const [selectedTraveler, setSelectedTraveler] = useState(existingTrip?.travelers || "");
 
     // useState for card visibility
     const [showLoginCard, setShowLoginCard] = useState(false);
@@ -52,6 +63,9 @@ const CreateTrip = () => {
 
     // Fetch createTrip from tripStore
     const createTrip = useTripStore((state) => state.createTrip);
+
+    // Fetch updateTrip from tripStore
+    const actionUpdateTrip = useTripStore((state) => state.actionUpdateTrip);
 
     // Navigate
     const navigate = useNavigate();
@@ -72,9 +86,9 @@ const CreateTrip = () => {
         getGplaceKey();
     }, []);
 
-    // useEffect for update Form Data whenever it changes
+    // useEffect for log update Form Data whenever it changes
     useEffect(() => {
-        console.log(formData);
+        console.log("Form Data", formData);
     }, [formData]);
 
     // useEffect for checking user login status
@@ -86,10 +100,11 @@ const CreateTrip = () => {
 
     // Fn handleInputChange update Form Data when user select destination, days, budget, traveler
     const hdlInputChange = (name, value) => {
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+        // setFormData({
+        //     ...formData,
+        //     [name]: value,
+        // }); // Old Code
+        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     };
 
     // Fn for generate trip from AI
@@ -105,7 +120,7 @@ const CreateTrip = () => {
 
         // Construct the prompt for the AI model
         const FINAL_PROMPT = AI_PROMPT
-            .replace("{destination}", formData?.destination.label)
+            .replace("{destination}", formData?.destination.label || place?.label)
             .replace("{totalDays}", formData?.numberOfDays)
             .replace("{traveler}", formData?.traveler)
             .replace("{budget}", formData?.budget)
@@ -120,7 +135,7 @@ const CreateTrip = () => {
 
             if (!result?.response?.text()) {
                 throw new Error("Invalid response from AI");
-            }        
+            }
 
             // Log to see trip data
             const jsonResponse = JSON.parse(result?.response?.text());
@@ -130,7 +145,13 @@ const CreateTrip = () => {
             console.log("JSON Response from AI form Create Trip", jsonResponse);
 
             // Save trip data to the database
-            await saveTripToDatabase(jsonResponse);
+            // await saveTripToDatabase(jsonResponse); // Old Code
+
+            if (isUpdate && existingTrip) {
+                await saveTripToDatabase(jsonResponse, existingTrip.id);
+            } else {
+                await saveTripToDatabase(jsonResponse);
+            }
 
         } catch (error) {
             console.error("Error generating trip:", error);
@@ -149,14 +170,24 @@ const CreateTrip = () => {
                 travelers: selectedTraveler,
                 days: parseInt(formData.numberOfDays, 10),
                 userId: userId, // user ID from Zustand
-                jsonResponse, // Send AI response for hotels and itinerary
+                // jsonResponse, // Send AI response for hotels and itinerary
+                hotels: jsonResponse.HotelOptions,
+                itinerary: jsonResponse.Itinerary,
             };
             console.log("Trip Data to save:", tripData)
 
-            const response = await createTrip(tripData)
-            console.log("Trip created:", response);
+            // const response = await createTrip(tripData)
+            // console.log("Trip created:", response);
+            // toast.success("Trip created successfully!");
 
-            toast.success("Trip created successfully!");
+            let response;
+            if (isUpdate && tripId) {
+                response = await actionUpdateTrip({ id: tripId, ...tripData });
+                toast.success("Trip updated successfully!");
+            } else {
+                response = await createTrip(tripData);
+                toast.success("Trip created successfully!");
+            }
 
             // // Redirect to the view trip page with the tripId
             // navigate(`/view-trip/${response.id}`);

@@ -87,34 +87,6 @@ const useTripStore = create((set) => ({
             throw error;
         }
     },
-    actionUpdateTrip: async (tripData) => {
-        try {
-            const token = useAuthStore.getState().token;
-
-            // Make sure to include tripId in the tripData
-            const response = await axios.put(`http://localhost:9900/trip/update-trip/${tripData.id}`, tripData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            console.log("Updating trip with data:", tripData);
-
-            // Update the trips state to reflect the updated trip
-            set((state) => ({
-                trips: state.trips.map((trip) =>
-                    trip.id === response.data.updatedTrip.id ? response.data.updatedTrip : trip
-                ),
-            }));
-
-            console.log("Update trip in Zustand", response.data);
-            return response.data; // Return updated trip data
-        } catch (error) {
-            console.error('Error updating trip:', error);
-            throw error;
-        }
-    },
     actionDeleteHotel: async (tripId, hotelId) => {
         try {
             const token = useAuthStore.getState().token;
@@ -156,39 +128,32 @@ const useTripStore = create((set) => ({
             throw error;
         }
     },
-    actionUpdateItineraryTime: async (tripId, placeId, timeData) => {
+    actionUpdateTrip: async (tripId, updatedData) => {
         try {
             const token = useAuthStore.getState().token;
-            const response = await axios.put(`http://localhost:9900/trip/view-trip/${tripId}/places/${placeId}`, timeData, {
+            const response = await axios.put(`http://localhost:9900/trip/update-trip/${tripId}`, updatedData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
 
+            console.log("Updated Trip in Backend:", response.data.updatedTrip);
+    
+            // Update the state with the new trip data
             set((state) => ({
                 trips: state.trips.map((trip) =>
-                    trip.id === tripId
-                        ? {
-                            ...trip,
-                            Itinerary: trip.Itinerary.map((itinerary) =>
-                                itinerary.id === placeId
-                                    ? { ...itinerary, startTime: timeData.startTime, endTime: timeData.endTime }
-                                    : itinerary
-                            ),
-                        }
-                        : trip
+                    trip.id === response.data.updatedTrip.id ? response.data.updatedTrip : trip
                 ),
             }));
-
-            console.log("Update itinerary time in Zustand", response.data);
-
+    
+            return response.data.updatedTrip;
+            
         } catch (error) {
-            console.error('Error updating itinerary time:', error);
+            console.error('Error updating trip:', error);
             throw error;
         }
     },
-
 }));
 
 export default useTripStore;

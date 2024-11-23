@@ -19,27 +19,32 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
 
     // useEffect for fetch place photo based on trip details
     useEffect(() => {
-        const fetchItineraryPhotos = async () => {
-            if (trip && itineraries) {
-                // Sort itineraries by startTime
-                const sortedItineraries = itineraries.sort((a, b) => {
-                    return a.startTime.localeCompare(b.startTime);
-                });
-
-                const itinerariesWithPhotos = await Promise.all(sortedItineraries.map(async (itinerary) => {
-                    const photoUrl = await GetItineraryPhotos(itinerary);
-                    return { ...itinerary, photoUrl };
-                }));
-
-                // Set the itinerary photos in state
-                setItineraryPhotos(itinerariesWithPhotos.reduce((acc, itinerary) => {
-                    acc[itinerary.id] = itinerary.photoUrl;
-                    return acc;
-                }, {}));
-            }
-        };
-        fetchItineraryPhotos();
+        if (trip && itineraries) {
+            fetchItineraryPhotos();
+        }
     }, [trip, itineraries]);
+
+    // Fn for fetch place photo
+    const fetchItineraryPhotos = async () => {
+        const sortedItineraries = sortItineraries(itineraries);
+
+        const itinerariesWithPhotos = await Promise.all(sortedItineraries.map(async (itinerary) => {
+            const photoUrl = await GetItineraryPhotos(itinerary);
+            return { ...itinerary, photoUrl };
+        }));
+
+        setItineraryPhotos(itinerariesWithPhotos.reduce((acc, itinerary) => {
+            acc[itinerary.id] = itinerary.photoUrl;
+            return acc;
+        }, {}));
+    };
+
+    // Fn for sort itineraries
+    const sortItineraries = (itineraries) => {
+        return itineraries.sort((a, b) => {
+            return a.startTime.localeCompare(b.startTime);
+        });
+    };
 
     // Fn for get itinerary photo 
     const GetItineraryPhotos = async (itinerary) => {
@@ -77,51 +82,57 @@ const ItineraryViewTrip = ({ trip, itineraries }) => {
                         dayGroup.places.push(itinerary);
                     }
                     return acc;
-                }, []).map((group) => (
-                    <div key={group.day} className="my-2">
-                        <p className="font-semibold mb-2 p-4">Day {group.day}</p>
-                        {group.places.map((itinerary) => (
-                            <div key={itinerary.id} className="flex items-start mb-4 rounded-2xl shadow-xl">
-                                <div className="flex-grow flex gap-2">
-                                    <Link
-                                        key={itinerary.id}
-                                        to={`https://www.google.com/maps/search/?api=1&query=${itinerary.placeName}`}
-                                        target="_blank"
-                                    >
-                                        <img
-                                            src={itineraryPhotos[itinerary.id] || DefaultImage}
-                                            alt={itinerary.placeName}
-                                            className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
-                                        />
-                                    </Link>
-                                    <div className="px-8 m-auto flex flex-col gap-2 min-w-[736px]">
-                                        <div className="flex items-center justify-between">
-                                            <p className="text-blue-500 font-semibold">{itinerary.startTime} - {itinerary.endTime}</p>
-                                            <div className="flex gap-4">
-                                                <MenuPlace tripId={trip.id} placeId={itinerary.id} tripDetails={itinerary} onClose={() => { }} />
-                                            </div>
-                                        </div>
-                                        <h3 className="font-bold">{itinerary.placeName}</h3>
-                                        <p>{itinerary.placeDescription}</p>
-                                        <div className="flex items-center justify-between">
-                                            <p>Ticket Price: THB {itinerary.ticketPrice}</p>
-                                            {/* Map */}
+                }, []).sort((a, b) => a.day - b.day) // Sort by dat
+                    .map((group) => {
+                        // Sort itinerary by startTime in each day
+                        const sortedPlaces = group.places.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+                        return (
+                            <div key={group.day} className="my-2">
+                                <p className="font-semibold mb-2 p-4">Day {group.day}</p>
+                                {sortedPlaces.map((itinerary) => (
+                                    <div key={itinerary.id} className="flex items-start mb-4 rounded-2xl shadow-xl">
+                                        <div className="flex-grow flex gap-2">
                                             <Link
                                                 key={itinerary.id}
                                                 to={`https://www.google.com/maps/search/?api=1&query=${itinerary.placeName}`}
                                                 target="_blank"
                                             >
-                                                <MapIcon className="h-10 w-10" />
+                                                <img
+                                                    src={itineraryPhotos[itinerary.id] || DefaultImage}
+                                                    alt={itinerary.placeName}
+                                                    className="h-48 rounded-2xl min-w-80 max-w-80 object-cover"
+                                                />
                                             </Link>
+                                            <div className="px-8 m-auto flex flex-col gap-2 min-w-[736px]">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-blue-500 font-semibold">{itinerary.startTime} - {itinerary.endTime}</p>
+                                                    <div className="flex gap-4">
+                                                        <MenuPlace tripId={trip.id} placeId={itinerary.id} tripDetails={itinerary} onClose={() => { }} />
+                                                    </div>
+                                                </div>
+                                                <h3 className="font-bold">{itinerary.placeName}</h3>
+                                                <p>{itinerary.placeDescription}</p>
+                                                <div className="flex items-center justify-between">
+                                                    <p>Ticket Price: THB {itinerary.ticketPrice}</p>
+                                                    {/* Map */}
+                                                    <Link
+                                                        key={itinerary.id}
+                                                        to={`https://www.google.com/maps/search/?api=1&query=${itinerary.placeName}`}
+                                                        target="_blank"
+                                                    >
+                                                        <MapIcon className="h-10 w-10" />
+                                                    </Link>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                ))}
+                        );
+                    })}
             </div>
-        </div >
+        </div>
     )
 }
 

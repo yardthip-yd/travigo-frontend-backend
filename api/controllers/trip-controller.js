@@ -1,6 +1,6 @@
 // Import
 const tryCatch = require("../utils/try-catch")
-const saveTripData = require("../services/trip-services");
+const saveOrUpdateTripData = require("../services/trip-services");
 const createError = require("../utils/create-error");
 const prisma = require("../config/prisma-config");
 
@@ -11,23 +11,10 @@ tripController.createTrip = tryCatch(async (req, res) => {
     console.log("Received trip data from trip-cont", req.body)
 
     const tripData = req.input;
-    const result = await saveTripData(tripData);
+    // const result = await saveTripData(tripData);
+
+    const result = await saveOrUpdateTripData(tripData, false);
     res.json({ message: "Saving trip data successful", result });
-
-
-    // const tripData = req.body; // Update to use req.body
-    // const { trip, savedHotels, savedItinerary } = await saveTripData(tripData); // Destructure the result
-
-    // // Send response with trip, hotels, and itinerary
-    // res.status(201).json({
-    //     message: "Saving trip data successful",
-    //     result: {
-    //         trip,
-    //         hotels: savedHotels,
-    //         itinerary: savedItinerary
-    //     }
-    // });
-
 })
 
 tripController.getTrip = tryCatch(async (req, res) => {
@@ -102,147 +89,6 @@ tripController.deleteTrip = tryCatch(async (req, res) => {
 
 
     res.status(200).json({ message: "Trip deleted successfully", deletedTrip });
-});
-
-tripController.updateTrip = tryCatch(async (req, res) => {
-    const { tripId } = req.params;
-    const tripData = req.body;
-
-    // Log the trip ID and incoming data
-    console.log("Updating trip with ID:", tripId);
-    console.log("Received trip data:", tripData);
-    console.log("Itinerary data:", tripData.itinerary[0].Places[0].PlaceName);
-
-    tripData.itinerary.forEach(day => {
-        console.log(`Day: ${day.Day}`);
-        if (day.Places && Array.isArray(day.Places)) {
-            day.Places.forEach(place => {
-                console.log(`Place Name: ${place.PlaceName}`);
-            });
-        } else {
-            console.log("No places found for this day.");
-        }
-    });
-
-    if (!tripId) {
-        return createError(400, "Trip ID is required");
-    }
-
-    try {
-        // Perform the update operation using Prisma
-        const updatedTrip = await prisma.trip.update({
-            where: {
-                id: parseInt(tripId, 10),
-            },
-            data: {
-                destination: tripData.destination,
-                travelers: tripData.travelers,
-                budget: tripData.budget,
-                days: tripData.days,
-                Hotel: {
-                    create: tripData.hotels.map(hotel => ({
-                        hotelName: hotel.HotelName,
-                        hotelAddress: hotel.HotelAddress,
-                        hotelPrice: parseFloat(hotel.HotelPrice),
-                        hotelRating: parseFloat(hotel.HotelRating),
-                        hotelDescription: hotel.HotelDescription,
-                        latitude: parseFloat(hotel.HotelGeoCoordinates.latitude),
-                        longitude: parseFloat(hotel.HotelGeoCoordinates.longitude),
-                    })),
-                },
-                Itinerary: {
-                    create: tripData.itinerary.map(day => ({
-                        day: parseInt(day.Day, 10),
-                        Places: {
-                            create: day.Places.map(plan => ({
-                                placeName: plan.PlaceName,
-                                placeDescription: plan.PlaceDetails,
-                                ticketPrice: parseFloat(plan.TicketPricing) || 0,
-                                latitude: parseFloat(plan.PlaceGeoCoordinates.latitude),
-                                longitude: parseFloat(plan.PlaceGeoCoordinates.longitude),
-                                startTime: plan.StartTime || null,
-                                endTime: plan.EndTime || null,
-                            })),
-                        },
-                    })),
-                },
-            },
-        });
-
-        // Log successful update
-        console.log("Trip updated successfully:", updatedTrip);
-        res.json({ message: "Trip updated successfully", updatedTrip });
-
-    } catch (error) {
-        // Log the error if the update fails
-        console.error("Error updating trip:", error);
-        return createError(500, "Error updating trip. Please try again.");
-    }
-});
-
-tripController.updateHotelsAndItinerary = tryCatch(async (req, res) => {
-    const { tripId } = req.params;
-    const { hotels, itinerary } = req.body;
-
-    if (!tripId) {
-        return createError(400, "Trip ID is required");
-    }
-
-    try {
-        // Update hotels
-        if (hotels && Array.isArray(hotels)) {
-            for (const hotel of hotels) {
-                if (!hotel.HotelName) {
-                    continue;
-                }
-                await prisma.hotel.update({
-                    where: {
-                        tripId: parseInt(tripId, 10),
-                        hotelName: hotel.HotelName,
-                    },
-                    data: {
-                        hotelAddress: hotel.HotelAddress,
-                        hotelPrice: hotel.HotelPrice,
-                        hotelRating: parseFloat(hotel.HotelRating) || 0,
-                        hotelDescription: hotel.HotelDescription,
-                        latitude: parseFloat(hotel.HotelGeoCoordinates.latitude),
-                        longitude: parseFloat(place.PlaceGeoCoordinates.longitude)
-                    },
-                });
-            }
-        }
-
-        // Update itinerary
-        if (itinerary && Array.isArray(itinerary)) {
-            for (const day of itinerary) {
-                if (!day.Day) {
-                    continue;
-                }
-                for (const place of day.Places) {
-                    await prisma.itinerary.update({
-                        where: {
-                            tripId: parseInt(tripId, 10),
-                            day: day.Day,
-                            placeName: place.PlaceName,
-                        },
-                        data: {
-                            placeDescription: place.PlaceDetails,
-                            ticketPrice: parseFloat(place.TicketPricing) || 0,
-                            latitude: parseFloat(place.PlaceGeoCoordinates.latitude),
-                            longitude: parseFloat(place.PlaceGeoCoordinates.longitude),
-                            startTime: place.StartTime,
-                            endTime: place.EndTime,
-                        },
-                    });
-                }
-            }
-        }
-
-        res.status(200).json({ message: "Hotels and itinerary updated successfully." });
-    } catch (error) {
-        console.error("Error updating hotels and itinerary:", error);
-        return createError(500, "Error updating hotels and itinerary. Please try again.");
-    }
 });
 
 tripController.deleteHotel = tryCatch(async (req, res) => {
@@ -321,5 +167,45 @@ tripController.updateItineraryTime = tryCatch(async (req, res) => {
     }
 });
 
+tripController.updateTrip = tryCatch(async (req, res) => {
+    const { tripId } = req.params;
+    const { days, budget, travelers, hotels = [], itinerary = [] } = req.body;
+
+    console.log("Update Trip Request Data:", { tripId, days, budget, travelers, hotels, itinerary });
+    
+    // Validate inputs
+    if (!tripId || !days || !budget || !travelers) {
+        return createError(400, "All fields are required to update the trip.");
+    }
+
+    // Get the existing trip to keep destination unchanged
+    const existingTrip = await prisma.trip.findUnique({
+        where: { id: parseInt(tripId, 10) },
+    });
+
+    if (!existingTrip) {
+        return createError(404, "Trip not found.");
+    }
+
+       // Update the trip data in the database using the updated saveOrUpdateTripData function
+       const updatedTripData = {
+        id: parseInt(tripId, 10),
+        days: parseInt(days, 10),
+        budget,
+        travelers,
+        hotels,
+        itinerary,
+        userId: existingTrip.userId,
+        destination: existingTrip.destination,
+    };
+
+    const updatedTrip = await saveOrUpdateTripData(updatedTripData, true); // true for updating an existing trip
+    
+    
+    res.json({
+        message: "Trip updated successfully.",
+        updatedTrip,
+    });
+});
 
 module.exports = tripController
