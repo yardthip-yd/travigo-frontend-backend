@@ -143,7 +143,11 @@ const useTripStore = create((set) => ({
             // Update the state with the new trip data
             set((state) => ({
                 trips: state.trips.map((trip) =>
-                    trip.id === response.data.updatedTrip.id ? response.data.updatedTrip : trip
+                    trip.id === response.data.updatedTrip.id ? {
+                        ...trip,
+                        ...response.data.updatedTrip,
+                    }
+                    : trip
                 ),
             }));
     
